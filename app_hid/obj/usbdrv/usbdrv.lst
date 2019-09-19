@@ -5097,33 +5097,33 @@
  4153               	.global __do_clear_bss
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 usbdrv.c
-     /tmp/ccx7VRld.s:2      *ABS*:000000000000003e __SP_H__
-     /tmp/ccx7VRld.s:3      *ABS*:000000000000003d __SP_L__
-     /tmp/ccx7VRld.s:4      *ABS*:000000000000003f __SREG__
-     /tmp/ccx7VRld.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccx7VRld.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccx7VRld.s:12     .text:0000000000000000 usbSetInterrupt
+     /tmp/ccqHkiJd.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccqHkiJd.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccqHkiJd.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccqHkiJd.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccqHkiJd.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccqHkiJd.s:12     .text:0000000000000000 usbSetInterrupt
                             *COM*:000000000000000c usbTxStatus1
-     /tmp/ccx7VRld.s:94     .text:000000000000004a usbPoll
+     /tmp/ccqHkiJd.s:94     .text:000000000000004a usbPoll
                             *COM*:0000000000000001 usbRxLen
                             *COM*:0000000000000001 usbInputBufOffset
                             *COM*:0000000000000016 usbRxBuf
                             *COM*:0000000000000001 usbRxToken
                             *COM*:000000000000000b usbTxBuf
-     /tmp/ccx7VRld.s:928    .data:0000000000000001 usbTxLen
-     /tmp/ccx7VRld.s:808    .bss:0000000000000001 usbMsgFlags
+     /tmp/ccqHkiJd.s:928    .data:0000000000000001 usbTxLen
+     /tmp/ccqHkiJd.s:808    .bss:0000000000000001 usbMsgFlags
                             *COM*:0000000000000001 usbNewDeviceAddr
-     /tmp/ccx7VRld.s:851    .progmem.data:0000000000000022 usbDescriptorDevice
+     /tmp/ccqHkiJd.s:851    .progmem.data:0000000000000022 usbDescriptorDevice
                             *COM*:0000000000000002 usbMsgPtr
-     /tmp/ccx7VRld.s:813    .progmem.data:0000000000000000 usbDescriptorConfiguration
-     /tmp/ccx7VRld.s:910    .progmem.data:000000000000006e usbDescriptorString0
-     /tmp/ccx7VRld.s:895    .progmem.data:0000000000000058 usbDescriptorStringVendor
-     /tmp/ccx7VRld.s:873    .progmem.data:0000000000000034 usbDescriptorStringDevice
+     /tmp/ccqHkiJd.s:813    .progmem.data:0000000000000000 usbDescriptorConfiguration
+     /tmp/ccqHkiJd.s:910    .progmem.data:000000000000006e usbDescriptorString0
+     /tmp/ccqHkiJd.s:895    .progmem.data:0000000000000058 usbDescriptorStringVendor
+     /tmp/ccqHkiJd.s:873    .progmem.data:0000000000000034 usbDescriptorStringDevice
                             *COM*:0000000000000001 usbConfiguration
-     /tmp/ccx7VRld.s:920    .data:0000000000000000 usbMsgLen
+     /tmp/ccqHkiJd.s:920    .data:0000000000000000 usbMsgLen
                             *COM*:0000000000000001 usbDeviceAddr
                              .bss:0000000000000000 wasReset.1770
-     /tmp/ccx7VRld.s:775    .text:0000000000000326 usbInit
+     /tmp/ccqHkiJd.s:775    .text:0000000000000326 usbInit
                             *COM*:0000000000000001 usbCurrentTok
 
 UNDEFINED SYMBOLS

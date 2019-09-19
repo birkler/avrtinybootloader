@@ -2,10 +2,12 @@ Archive member included to satisfy reference by file (symbol)
 
 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
                               (vfprintf)
+/usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
+                              obj/obj/main.o (__mulhi3)
 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
                               obj/obj/main.o (__mulsi3)
-/usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
-                              obj/obj/main.o (__udivmodhi4)
+/usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
+                              obj/obj/main.o (__divmodhi4)
 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
                               /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o (exit)
 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
@@ -16,14 +18,14 @@ Archive member included to satisfy reference by file (symbol)
                               obj/obj/main.o (__prologue_saves__)
 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
                               obj/obj/main.o (__epilogue_restores__)
+/usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                              /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o) (__udivmodhi4)
 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
                               /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o) (strchr_P)
 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
                               /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o) (fputc)
 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
                               obj/obj/main.o (__iob)
-/usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
-                              obj/obj/main.o (printf)
 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
                               obj/obj/main.o (printf_P)
 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
@@ -174,7 +176,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000     0x1302
+.text           0x0000000000000000     0x1388
  *(.vectors)
  .vectors       0x0000000000000000       0x26 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
                 0x0000000000000000                __vectors
@@ -196,39 +198,39 @@ END GROUP
                 0x000000000000005a                usbDescriptorStringDevice
                 0x000000000000007e                usbDescriptorStringVendor
                 0x0000000000000094                usbDescriptorString0
- .progmem.data  0x0000000000000098       0x54 obj/obj/main.o
-                0x000000000000009c                usbDescriptorHidReport
- .progmem.data  0x00000000000000ec       0x17 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
-                0x0000000000000104                . = ALIGN (0x2)
- *fill*         0x0000000000000103        0x1 
+ .progmem.data  0x0000000000000098       0x5e obj/obj/main.o
+                0x00000000000000a6                usbDescriptorHidReport
+ .progmem.data  0x00000000000000f6       0x17 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
+                0x000000000000010e                . = ALIGN (0x2)
+ *fill*         0x000000000000010d        0x1 
  *(.jumptables)
  *(.jumptables*)
  *(.lowtext)
  *(.lowtext*)
-                0x0000000000000104                __ctors_start = .
+                0x000000000000010e                __ctors_start = .
  *(.ctors)
-                0x0000000000000104                __ctors_end = .
-                0x0000000000000104                __dtors_start = .
+                0x000000000000010e                __ctors_end = .
+                0x000000000000010e                __dtors_start = .
  *(.dtors)
-                0x0000000000000104                __dtors_end = .
+                0x000000000000010e                __dtors_end = .
  SORT(*)(.ctors)
  SORT(*)(.dtors)
  *(.init0)
- .init0         0x0000000000000104        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
-                0x0000000000000104                __init
+ .init0         0x000000000000010e        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
+                0x000000000000010e                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x0000000000000104        0xc /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
+ .init2         0x000000000000010e        0xc /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x0000000000000110       0x16 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
-                0x0000000000000110                __do_copy_data
- .init4         0x0000000000000126       0x10 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
-                0x0000000000000126                __do_clear_bss
+ .init4         0x000000000000011a       0x16 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+                0x000000000000011a                __do_copy_data
+ .init4         0x0000000000000130       0x10 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+                0x0000000000000130                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -239,197 +241,230 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x0000000000000136        0x4 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
+ .init9         0x0000000000000140        0x4 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
  *(.init9)
  *(.text)
- .text          0x000000000000013a        0x2 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
-                0x000000000000013a                __vector_12
-                0x000000000000013a                __bad_interrupt
-                0x000000000000013a                __vector_6
-                0x000000000000013a                __vector_3
-                0x000000000000013a                __vector_11
-                0x000000000000013a                __vector_13
-                0x000000000000013a                __vector_17
-                0x000000000000013a                __vector_7
-                0x000000000000013a                __vector_5
-                0x000000000000013a                __vector_4
-                0x000000000000013a                __vector_9
-                0x000000000000013a                __vector_2
-                0x000000000000013a                __vector_15
-                0x000000000000013a                __vector_8
-                0x000000000000013a                __vector_14
-                0x000000000000013a                __vector_10
-                0x000000000000013a                __vector_18
- .text          0x000000000000013c      0x340 obj/obj/./../usbdrv/usbdrv.o
-                0x000000000000013c                usbSetInterrupt
-                0x0000000000000186                usbPoll
-                0x0000000000000462                usbInit
- .text          0x000000000000047c      0x108 obj/obj/main.o
-                0x000000000000047c                filter_iir2
-                0x000000000000056a                __vector_16
-                0x0000000000000580                usbFunctionSetup2
- .text          0x0000000000000584       0x74 obj/obj/../osccal/osccal.o
-                0x0000000000000584                calibrateOscillator
- .text          0x00000000000005f8        0x0 obj/obj/../usbdrv/oddebug.o
- .text          0x00000000000005f8       0xe6 obj/obj/../util/timers.o
-                0x00000000000005f8                Timers_Init
-                0x0000000000000618                Timers_DecreaseAll
-                0x000000000000067c                Timer_HasExpired
-                0x00000000000006a4                Timer_Reset
-                0x00000000000006ba                Timer_SetExpired
-                0x00000000000006cc                Timer_Set
- .text          0x00000000000006de       0x78 obj/obj/../util/stream.o
-                0x00000000000006de                stream_putchar
-                0x0000000000000716                stream_getchar_nowait
-                0x000000000000073e                stream_getchar_wait
- .text          0x0000000000000756      0x116 obj/obj/../util/usbstream.o
-                0x00000000000007c4                usbFunctionSetup
-                0x00000000000007fc                usbFunctionRead2
-                0x0000000000000800                usbFunctionRead
-                0x0000000000000850                usbFunctionWrite2
-                0x0000000000000854                usbFunctionWrite
- .text          0x000000000000086c      0x334 obj/obj/./../usbdrv/usbdrvasm.o
-                0x000000000000086c                usbCrc16
-                0x00000000000008b6                usbCrc16Append
-                0x00000000000008be                usbMeasureFrameLength
-                0x00000000000008e4                __vector_1
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
- .text          0x0000000000000ba0        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
-                0x0000000000000ba0                . = ALIGN (0x2)
+ .text          0x0000000000000144        0x2 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
+                0x0000000000000144                __vector_12
+                0x0000000000000144                __bad_interrupt
+                0x0000000000000144                __vector_6
+                0x0000000000000144                __vector_3
+                0x0000000000000144                __vector_11
+                0x0000000000000144                __vector_13
+                0x0000000000000144                __vector_17
+                0x0000000000000144                __vector_7
+                0x0000000000000144                __vector_5
+                0x0000000000000144                __vector_4
+                0x0000000000000144                __vector_9
+                0x0000000000000144                __vector_2
+                0x0000000000000144                __vector_15
+                0x0000000000000144                __vector_8
+                0x0000000000000144                __vector_14
+                0x0000000000000144                __vector_10
+                0x0000000000000144                __vector_18
+ .text          0x0000000000000146      0x340 obj/obj/./../usbdrv/usbdrv.o
+                0x0000000000000146                usbSetInterrupt
+                0x0000000000000190                usbPoll
+                0x000000000000046c                usbInit
+ .text          0x0000000000000486      0x240 obj/obj/main.o
+                0x0000000000000486                filter_iir2
+                0x0000000000000574                __vector_16
+                0x000000000000058a                usbFunctionSetup2
+                0x000000000000058e                unpack_color_red
+                0x0000000000000592                unpack_color_green
+                0x00000000000005a6                unpack_color_blue
+                0x00000000000005c6                send_strip_byte
+                0x00000000000005de                send_color
+                0x0000000000000602                getRainbowColor
+ .text          0x00000000000006c6       0x74 obj/obj/../osccal/osccal.o
+                0x00000000000006c6                calibrateOscillator
+ .text          0x000000000000073a        0x0 obj/obj/../usbdrv/oddebug.o
+ .text          0x000000000000073a       0xe6 obj/obj/../util/timers.o
+                0x000000000000073a                Timers_Init
+                0x000000000000075a                Timers_DecreaseAll
+                0x00000000000007be                Timer_HasExpired
+                0x00000000000007e6                Timer_Reset
+                0x00000000000007fc                Timer_SetExpired
+                0x000000000000080e                Timer_Set
+ .text          0x0000000000000820       0x78 obj/obj/../util/stream.o
+                0x0000000000000820                stream_putchar
+                0x0000000000000858                stream_getchar_nowait
+                0x0000000000000880                stream_getchar_wait
+ .text          0x0000000000000898      0x116 obj/obj/../util/usbstream.o
+                0x0000000000000906                usbFunctionSetup
+                0x000000000000093e                usbFunctionRead2
+                0x0000000000000942                usbFunctionRead
+                0x0000000000000992                usbFunctionWrite2
+                0x0000000000000996                usbFunctionWrite
+ .text          0x00000000000009ae      0x334 obj/obj/./../usbdrv/usbdrvasm.o
+                0x00000000000009ae                usbCrc16
+                0x00000000000009f8                usbCrc16Append
+                0x0000000000000a00                usbMeasureFrameLength
+                0x0000000000000a26                __vector_1
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
+ .text          0x0000000000000ce2        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
+                0x0000000000000ce2                . = ALIGN (0x2)
  *(.text.*)
- .text.startup  0x0000000000000ba0      0x2c4 obj/obj/main.o
-                0x0000000000000ba0                main
+ .text.startup  0x0000000000000ce2      0x1e6 obj/obj/main.o
+                0x0000000000000ce2                main
  .text.avr-libc
-                0x0000000000000e64      0x218 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
-                0x0000000000000e64                vfprintf
+                0x0000000000000ec8      0x218 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
+                0x0000000000000ec8                vfprintf
  .text.libgcc.mul
-                0x000000000000107c       0x32 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
-                0x000000000000107c                __mulsi3
-                0x0000000000001080                __mulsi3_helper
+                0x00000000000010e0       0x22 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
+                0x00000000000010e0                __mulhi3
  .text.libgcc.div
-                0x00000000000010ae        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
- .text.libgcc   0x00000000000010ae        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+                0x0000000000001102        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
+ .text.libgcc   0x0000000000001102        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
  .text.libgcc.prologue
-                0x00000000000010ae        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+                0x0000000000001102        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
  .text.libgcc.builtins
-                0x00000000000010ae        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+                0x0000000000001102        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
  .text.libgcc.fmul
-                0x00000000000010ae        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+                0x0000000000001102        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
  .text.libgcc.fixed
-                0x00000000000010ae        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+                0x0000000000001102        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
  .text.libgcc.mul
-                0x00000000000010ae        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000001102       0x32 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+                0x0000000000001102                __mulsi3
+                0x0000000000001106                __mulsi3_helper
  .text.libgcc.div
-                0x00000000000010ae       0x28 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
-                0x00000000000010ae                __udivmodhi4
- .text.libgcc   0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000001134        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc   0x0000000000001134        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
  .text.libgcc.prologue
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000001134        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
  .text.libgcc.builtins
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000001134        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
  .text.libgcc.fmul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000001134        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
  .text.libgcc.fixed
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x0000000000001134        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
  .text.libgcc.mul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+                0x0000000000001134        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
  .text.libgcc.div
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
- .text.libgcc   0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+                0x0000000000001134       0x26 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
+                0x0000000000001134                __divmodhi4
+                0x0000000000001134                _div
+ .text.libgcc   0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
  .text.libgcc.prologue
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
  .text.libgcc.builtins
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
  .text.libgcc.fmul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
  .text.libgcc.fixed
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
  .text.libgcc.mul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
- .text.libgcc   0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+ .text.libgcc   0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
  .text.libgcc.div
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
- .text.libgcc   0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+ .text.libgcc   0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
  .text.libgcc.prologue
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
  .text.libgcc.builtins
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
  .text.libgcc.fmul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
  .text.libgcc.fixed
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
  .text.libgcc.mul
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
  .text.libgcc.div
-                0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
- .text.libgcc   0x00000000000010d6        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
  .text.libgcc.prologue
-                0x00000000000010d6       0x38 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
-                0x00000000000010d6                __prologue_saves__
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
  .text.libgcc.builtins
-                0x000000000000110e        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
  .text.libgcc.fmul
-                0x000000000000110e        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
  .text.libgcc.fixed
-                0x000000000000110e        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
  .text.libgcc.mul
-                0x000000000000110e        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
  .text.libgcc.div
-                0x000000000000110e        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
- .text.libgcc   0x000000000000110e        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+                0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+ .text.libgcc   0x000000000000115a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
  .text.libgcc.prologue
-                0x000000000000110e       0x36 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
-                0x000000000000110e                __epilogue_restores__
+                0x000000000000115a       0x38 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+                0x000000000000115a                __prologue_saves__
  .text.libgcc.builtins
-                0x0000000000001144        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+                0x0000000000001192        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
  .text.libgcc.fmul
-                0x0000000000001144        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+                0x0000000000001192        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
  .text.libgcc.fixed
-                0x0000000000001144        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+                0x0000000000001192        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+ .text.libgcc.mul
+                0x0000000000001192        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .text.libgcc.div
+                0x0000000000001192        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .text.libgcc   0x0000000000001192        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .text.libgcc.prologue
+                0x0000000000001192       0x36 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+                0x0000000000001192                __epilogue_restores__
+ .text.libgcc.builtins
+                0x00000000000011c8        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .text.libgcc.fmul
+                0x00000000000011c8        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .text.libgcc.fixed
+                0x00000000000011c8        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .text.libgcc.mul
+                0x00000000000011c8        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.div
+                0x00000000000011c8       0x28 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x00000000000011c8                __udivmodhi4
+ .text.libgcc   0x00000000000011f0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x00000000000011f0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x00000000000011f0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x00000000000011f0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x00000000000011f0        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
  .text.avr-libc
-                0x0000000000001144       0x16 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
-                0x0000000000001144                strchr_P
+                0x00000000000011f0       0x16 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
+                0x00000000000011f0                strchr_P
  .text.avr-libc
-                0x000000000000115a       0x78 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
-                0x000000000000115a                fputc
+                0x0000000000001206       0x78 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
+                0x0000000000001206                fputc
  .text.avr-libc
-                0x00000000000011d2       0x26 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
-                0x00000000000011d2                printf
+                0x000000000000127e       0x46 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
+                0x000000000000127e                printf_P
  .text.avr-libc
-                0x00000000000011f8       0x46 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
-                0x00000000000011f8                printf_P
- .text.avr-libc
-                0x000000000000123e       0xc0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
-                0x000000000000123e                __ultoa_invert
-                0x00000000000012fe                . = ALIGN (0x2)
+                0x00000000000012c4       0xc0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
+                0x00000000000012c4                __ultoa_invert
+                0x0000000000001384                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000000000012fe        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
-                0x00000000000012fe                exit
-                0x00000000000012fe                _exit
+ .fini9         0x0000000000001384        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+                0x0000000000001384                exit
+                0x0000000000001384                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -448,101 +483,102 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000000000012fe        0x4 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+ .fini0         0x0000000000001384        0x4 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000001302                _etext = .
+                0x0000000000001388                _etext = .
 
-.data           0x0000000000800060       0x5e load address 0x0000000000001302
+.data           0x0000000000800060       0x34 load address 0x0000000000001388
                 0x0000000000800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
  .data          0x0000000000800060        0x2 obj/obj/./../usbdrv/usbdrv.o
                 0x0000000000800061                usbTxLen
- .data          0x0000000000800062        0x2 obj/obj/main.o
- .data          0x0000000000800064        0x0 obj/obj/../osccal/osccal.o
- .data          0x0000000000800064        0x0 obj/obj/../usbdrv/oddebug.o
- .data          0x0000000000800064        0x0 obj/obj/../util/timers.o
- .data          0x0000000000800064        0x0 obj/obj/../util/stream.o
- .data          0x0000000000800064       0x1c obj/obj/../util/usbstream.o
-                0x0000000000800064                usb_in_stream
-                0x0000000000800072                usb_out_stream
- .data          0x0000000000800080        0x0 obj/obj/./../usbdrv/usbdrvasm.o
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
- .data          0x0000000000800080        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
+ .data          0x0000000000800062       0x16 obj/obj/main.o
+                0x0000000000800063                rainbow_colors
+ .data          0x0000000000800078        0x0 obj/obj/../osccal/osccal.o
+ .data          0x0000000000800078        0x0 obj/obj/../usbdrv/oddebug.o
+ .data          0x0000000000800078        0x0 obj/obj/../util/timers.o
+ .data          0x0000000000800078        0x0 obj/obj/../util/stream.o
+ .data          0x0000000000800078       0x1c obj/obj/../util/usbstream.o
+                0x0000000000800078                usb_in_stream
+                0x0000000000800086                usb_out_stream
+ .data          0x0000000000800094        0x0 obj/obj/./../usbdrv/usbdrvasm.o
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
+ .data          0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
  *(.data*)
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
- .rodata.str1.1
-                0x0000000000800080       0x3e obj/obj/main.o
  *(.gnu.linkonce.r*)
-                0x00000000008000be                . = ALIGN (0x2)
-                0x00000000008000be                _edata = .
-                0x00000000008000be                PROVIDE (__data_end, .)
+                0x0000000000800094                . = ALIGN (0x2)
+                0x0000000000800094                _edata = .
+                0x0000000000800094                PROVIDE (__data_end, .)
 
-.bss            0x00000000008000be      0x10a
-                0x00000000008000be                PROVIDE (__bss_start, .)
+.bss            0x0000000000800094       0xe2
+                0x0000000000800094                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x00000000008000be        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
- .bss           0x00000000008000be        0x2 obj/obj/./../usbdrv/usbdrv.o
- .bss           0x00000000008000c0       0x32 obj/obj/main.o
- .bss           0x00000000008000f2        0x0 obj/obj/../osccal/osccal.o
- .bss           0x00000000008000f2        0x0 obj/obj/../usbdrv/oddebug.o
- .bss           0x00000000008000f2       0x11 obj/obj/../util/timers.o
- .bss           0x0000000000800103        0x0 obj/obj/../util/stream.o
- .bss           0x0000000000800103       0x89 obj/obj/../util/usbstream.o
- .bss           0x000000000080018c        0x0 obj/obj/./../usbdrv/usbdrvasm.o
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
- .bss           0x000000000080018c        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
+ .bss           0x0000000000800094        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
+ .bss           0x0000000000800094        0x2 obj/obj/./../usbdrv/usbdrv.o
+ .bss           0x0000000000800096        0xa obj/obj/main.o
+ .bss           0x00000000008000a0        0x0 obj/obj/../osccal/osccal.o
+ .bss           0x00000000008000a0        0x0 obj/obj/../usbdrv/oddebug.o
+ .bss           0x00000000008000a0       0x11 obj/obj/../util/timers.o
+ .bss           0x00000000008000b1        0x0 obj/obj/../util/stream.o
+ .bss           0x00000000008000b1       0x89 obj/obj/../util/usbstream.o
+ .bss           0x000000000080013a        0x0 obj/obj/./../usbdrv/usbdrvasm.o
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
+ .bss           0x000000000080013a        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x000000000080018c       0x36 obj/obj/./../usbdrv/usbdrv.o
-                0x000000000080018c                usbTxBuf
-                0x0000000000800197                usbTxStatus1
-                0x00000000008001a3                usbDeviceAddr
-                0x00000000008001a4                usbRxToken
-                0x00000000008001a5                usbInputBufOffset
-                0x00000000008001a6                usbMsgPtr
-                0x00000000008001a8                usbRxLen
-                0x00000000008001a9                usbNewDeviceAddr
-                0x00000000008001aa                usbCurrentTok
-                0x00000000008001ab                usbConfiguration
-                0x00000000008001ac                usbRxBuf
- COMMON         0x00000000008001c2        0x6 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
-                0x00000000008001c2                __iob
-                0x00000000008001c8                PROVIDE (__bss_end, .)
-                0x0000000000001302                __data_load_start = LOADADDR (.data)
-                0x0000000000001360                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x000000000080013a       0x36 obj/obj/./../usbdrv/usbdrv.o
+                0x000000000080013a                usbTxBuf
+                0x0000000000800145                usbTxStatus1
+                0x0000000000800151                usbDeviceAddr
+                0x0000000000800152                usbRxToken
+                0x0000000000800153                usbInputBufOffset
+                0x0000000000800154                usbMsgPtr
+                0x0000000000800156                usbRxLen
+                0x0000000000800157                usbNewDeviceAddr
+                0x0000000000800158                usbCurrentTok
+                0x0000000000800159                usbConfiguration
+                0x000000000080015a                usbRxBuf
+ COMMON         0x0000000000800170        0x6 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
+                0x0000000000800170                __iob
+                0x0000000000800176                PROVIDE (__bss_end, .)
+                0x0000000000001388                __data_load_start = LOADADDR (.data)
+                0x00000000000013bc                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00000000008001c8        0x0
+.noinit         0x0000000000800176        0x0
                 [!provide]                        PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                        PROVIDE (__noinit_end, .)
-                0x00000000008001c8                _end = .
+                0x0000000000800176                _end = .
                 [!provide]                        PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
@@ -597,7 +633,6 @@ END GROUP
  .comment       0x0000000000000011       0x12 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
  .comment       0x0000000000000011       0x12 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
  .comment       0x0000000000000011       0x12 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
- .comment       0x0000000000000011       0x12 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
  .comment       0x0000000000000011       0x12 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
 
 .note.gnu.avr.deviceinfo
@@ -640,74 +675,74 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000     0x2411
+.debug_info     0x0000000000000000     0x26a8
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x0000000000000000      0x4b0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
  .debug_info    0x00000000000004b0      0xa33 obj/obj/./../usbdrv/usbdrv.o
- .debug_info    0x0000000000000ee3      0x9b6 obj/obj/main.o
- .debug_info    0x0000000000001899      0x101 obj/obj/../osccal/osccal.o
- .debug_info    0x000000000000199a       0x56 obj/obj/../usbdrv/oddebug.o
- .debug_info    0x00000000000019f0      0x25b obj/obj/../util/timers.o
- .debug_info    0x0000000000001c4b      0x1b6 obj/obj/../util/stream.o
- .debug_info    0x0000000000001e01      0x610 obj/obj/../util/usbstream.o
+ .debug_info    0x0000000000000ee3      0xc4d obj/obj/main.o
+ .debug_info    0x0000000000001b30      0x101 obj/obj/../osccal/osccal.o
+ .debug_info    0x0000000000001c31       0x56 obj/obj/../usbdrv/oddebug.o
+ .debug_info    0x0000000000001c87      0x25b obj/obj/../util/timers.o
+ .debug_info    0x0000000000001ee2      0x1b6 obj/obj/../util/stream.o
+ .debug_info    0x0000000000002098      0x610 obj/obj/../util/usbstream.o
 
-.debug_abbrev   0x0000000000000000     0x10b4
+.debug_abbrev   0x0000000000000000     0x113a
  *(.debug_abbrev)
  .debug_abbrev  0x0000000000000000      0x470 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
  .debug_abbrev  0x0000000000000470      0x328 obj/obj/./../usbdrv/usbdrv.o
- .debug_abbrev  0x0000000000000798      0x3cd obj/obj/main.o
- .debug_abbrev  0x0000000000000b65       0x9b obj/obj/../osccal/osccal.o
- .debug_abbrev  0x0000000000000c00       0x26 obj/obj/../usbdrv/oddebug.o
- .debug_abbrev  0x0000000000000c26      0x115 obj/obj/../util/timers.o
- .debug_abbrev  0x0000000000000d3b      0x104 obj/obj/../util/stream.o
- .debug_abbrev  0x0000000000000e3f      0x275 obj/obj/../util/usbstream.o
+ .debug_abbrev  0x0000000000000798      0x453 obj/obj/main.o
+ .debug_abbrev  0x0000000000000beb       0x9b obj/obj/../osccal/osccal.o
+ .debug_abbrev  0x0000000000000c86       0x26 obj/obj/../usbdrv/oddebug.o
+ .debug_abbrev  0x0000000000000cac      0x115 obj/obj/../util/timers.o
+ .debug_abbrev  0x0000000000000dc1      0x104 obj/obj/../util/stream.o
+ .debug_abbrev  0x0000000000000ec5      0x275 obj/obj/../util/usbstream.o
 
-.debug_line     0x0000000000000000      0xc38
+.debug_line     0x0000000000000000      0xcaa
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x0000000000000000       0x1a /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
  .debug_line    0x000000000000001a      0x386 obj/obj/./../usbdrv/usbdrv.o
- .debug_line    0x00000000000003a0      0x3c2 obj/obj/main.o
- .debug_line    0x0000000000000762       0xe7 obj/obj/../osccal/osccal.o
- .debug_line    0x0000000000000849       0x1a obj/obj/../usbdrv/oddebug.o
- .debug_line    0x0000000000000863      0x11d obj/obj/../util/timers.o
- .debug_line    0x0000000000000980       0xe5 obj/obj/../util/stream.o
- .debug_line    0x0000000000000a65      0x1d3 obj/obj/../util/usbstream.o
+ .debug_line    0x00000000000003a0      0x434 obj/obj/main.o
+ .debug_line    0x00000000000007d4       0xe7 obj/obj/../osccal/osccal.o
+ .debug_line    0x00000000000008bb       0x1a obj/obj/../usbdrv/oddebug.o
+ .debug_line    0x00000000000008d5      0x11d obj/obj/../util/timers.o
+ .debug_line    0x00000000000009f2       0xe5 obj/obj/../util/stream.o
+ .debug_line    0x0000000000000ad7      0x1d3 obj/obj/../util/usbstream.o
 
-.debug_frame    0x0000000000000000      0x2e4
+.debug_frame    0x0000000000000000      0x380
  *(.debug_frame)
  .debug_frame   0x0000000000000000       0x58 obj/obj/./../usbdrv/usbdrv.o
- .debug_frame   0x0000000000000058       0xd0 obj/obj/main.o
- .debug_frame   0x0000000000000128       0x3c obj/obj/../osccal/osccal.o
- .debug_frame   0x0000000000000164       0x7c obj/obj/../util/timers.o
- .debug_frame   0x00000000000001e0       0x50 obj/obj/../util/stream.o
- .debug_frame   0x0000000000000230       0xb4 obj/obj/../util/usbstream.o
+ .debug_frame   0x0000000000000058      0x16c obj/obj/main.o
+ .debug_frame   0x00000000000001c4       0x3c obj/obj/../osccal/osccal.o
+ .debug_frame   0x0000000000000200       0x7c obj/obj/../util/timers.o
+ .debug_frame   0x000000000000027c       0x50 obj/obj/../util/stream.o
+ .debug_frame   0x00000000000002cc       0xb4 obj/obj/../util/usbstream.o
 
-.debug_str      0x0000000000000000      0xc9f
+.debug_str      0x0000000000000000      0xd70
  *(.debug_str)
  .debug_str     0x0000000000000000      0x1a0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
- .debug_str     0x00000000000001a0      0x4b6 obj/obj/./../usbdrv/usbdrv.o
+ .debug_str     0x00000000000001a0      0x4b0 obj/obj/./../usbdrv/usbdrv.o
                                         0x509 (size before relaxing)
- .debug_str     0x0000000000000656      0x3d5 obj/obj/main.o
-                                        0x628 (size before relaxing)
- .debug_str     0x0000000000000a2b       0x5d obj/obj/../osccal/osccal.o
+ .debug_str     0x0000000000000650      0x4b1 obj/obj/main.o
+                                        0x70f (size before relaxing)
+ .debug_str     0x0000000000000b01       0x5d obj/obj/../osccal/osccal.o
                                         0x1ba (size before relaxing)
- .debug_str     0x0000000000000a88       0x14 obj/obj/../usbdrv/oddebug.o
+ .debug_str     0x0000000000000b5e       0x14 obj/obj/../usbdrv/oddebug.o
                                         0x14c (size before relaxing)
- .debug_str     0x0000000000000a9c       0xa9 obj/obj/../util/timers.o
+ .debug_str     0x0000000000000b72       0xa9 obj/obj/../util/timers.o
                                         0x276 (size before relaxing)
- .debug_str     0x0000000000000b45       0x6a obj/obj/../util/stream.o
+ .debug_str     0x0000000000000c1b       0x6a obj/obj/../util/stream.o
                                         0x1d2 (size before relaxing)
- .debug_str     0x0000000000000baf       0xf0 obj/obj/../util/usbstream.o
+ .debug_str     0x0000000000000c85       0xeb obj/obj/../util/usbstream.o
                                         0x40b (size before relaxing)
 
-.debug_loc      0x0000000000000000     0x12ae
+.debug_loc      0x0000000000000000     0x14a8
  *(.debug_loc)
  .debug_loc     0x0000000000000000      0x8b2 obj/obj/./../usbdrv/usbdrv.o
- .debug_loc     0x00000000000008b2      0x334 obj/obj/main.o
- .debug_loc     0x0000000000000be6       0xee obj/obj/../osccal/osccal.o
- .debug_loc     0x0000000000000cd4      0x185 obj/obj/../util/timers.o
- .debug_loc     0x0000000000000e59      0x131 obj/obj/../util/stream.o
- .debug_loc     0x0000000000000f8a      0x324 obj/obj/../util/usbstream.o
+ .debug_loc     0x00000000000008b2      0x52e obj/obj/main.o
+ .debug_loc     0x0000000000000de0       0xee obj/obj/../osccal/osccal.o
+ .debug_loc     0x0000000000000ece      0x185 obj/obj/../util/timers.o
+ .debug_loc     0x0000000000001053      0x131 obj/obj/../util/stream.o
+ .debug_loc     0x0000000000001184      0x324 obj/obj/../util/usbstream.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -727,10 +762,10 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x0000000000000000       0x98
+.debug_ranges   0x0000000000000000       0xb0
  *(.debug_ranges)
  .debug_ranges  0x0000000000000000       0x80 obj/obj/./../usbdrv/usbdrv.o
- .debug_ranges  0x0000000000000080       0x18 obj/obj/main.o
+ .debug_ranges  0x0000000000000080       0x30 obj/obj/main.o
 
 .debug_macro
  *(.debug_macro)
@@ -756,6 +791,8 @@ __bss_start                                       /usr/lib/gcc/avr/5.4.0/avr25/l
 __data_end                                        /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
 __data_load_start                                 /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
 __data_start                                      /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_copy_data.o)
+__divmodhi4                                       /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
+                                                  obj/obj/main.o
 __do_clear_bss                                    /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_clear_bss.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
                                                   obj/obj/../util/usbstream.o
@@ -768,7 +805,6 @@ __do_copy_data                                    /usr/lib/gcc/avr/5.4.0/avr25/l
                                                   obj/obj/./../usbdrv/usbdrv.o
 __epilogue_restores__                             /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_epilogue.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
-                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
                                                   obj/obj/../osccal/osccal.o
                                                   obj/obj/main.o
@@ -776,20 +812,20 @@ __heap_end                                        /usr/lib/gcc/avr/5.4.0/../../.
 __init                                            /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
 __iob                                             /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(iob.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
-                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
+                                                  obj/obj/main.o
+__mulhi3                                          /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulhi3.o)
                                                   obj/obj/main.o
 __mulsi3                                          /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
                                                   obj/obj/main.o
 __mulsi3_helper                                   /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_mulsi3.o)
 __prologue_saves__                                /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_prologue.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
-                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
                                                   obj/obj/../osccal/osccal.o
                                                   obj/obj/main.o
 __stack                                           /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
 __udivmodhi4                                      /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_udivmodhi4.o)
-                                                  obj/obj/main.o
+                                                  /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
 __ultoa_invert                                    /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(ultoa_invert.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
 __vector_1                                        obj/obj/./../usbdrv/usbdrvasm.o
@@ -814,6 +850,7 @@ __vector_8                                        /usr/lib/gcc/avr/5.4.0/../../.
 __vector_9                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
 __vector_default                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
 __vectors                                         /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
+_div                                              /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_divmodhi4.o)
 _exit                                             /usr/lib/gcc/avr/5.4.0/avr25/libgcc.a(_exit.o)
 calibrateOscillator                               obj/obj/../osccal/osccal.o
                                                   obj/obj/./../usbdrv/usbdrv.o
@@ -822,12 +859,14 @@ exit                                              /usr/lib/gcc/avr/5.4.0/avr25/l
 filter_iir2                                       obj/obj/main.o
 fputc                                             /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(fputc.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
+getRainbowColor                                   obj/obj/main.o
 main                                              obj/obj/main.o
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/crtattiny861.o
-printf                                            /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)
-                                                  obj/obj/main.o
 printf_P                                          /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
                                                   obj/obj/main.o
+rainbow_colors                                    obj/obj/main.o
+send_color                                        obj/obj/main.o
+send_strip_byte                                   obj/obj/main.o
 strchr_P                                          /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(strchr_P.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
 stream_getchar_nowait                             obj/obj/../util/stream.o
@@ -835,6 +874,9 @@ stream_getchar_nowait                             obj/obj/../util/stream.o
 stream_getchar_wait                               obj/obj/../util/stream.o
 stream_putchar                                    obj/obj/../util/stream.o
                                                   obj/obj/../util/usbstream.o
+unpack_color_blue                                 obj/obj/main.o
+unpack_color_green                                obj/obj/main.o
+unpack_color_red                                  obj/obj/main.o
 usbConfiguration                                  obj/obj/./../usbdrv/usbdrv.o
 usbCrc16                                          obj/obj/./../usbdrv/usbdrvasm.o
 usbCrc16Append                                    obj/obj/./../usbdrv/usbdrvasm.o
@@ -892,4 +934,3 @@ usb_out_stream                                    obj/obj/../util/usbstream.o
                                                   obj/obj/main.o
 vfprintf                                          /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libprintf_min.a(vfprintf_min.o)
                                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf_p.o)
-                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr25/libc.a(printf.o)

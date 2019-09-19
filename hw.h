@@ -26,6 +26,16 @@
 #define LED_SENSOR_INPUT() DDRA &= ~_BV(PA2);PORTA &= ~_BV(PA2)
 #define LED_SENSOR_IS_HIGH() (PINA & _BV(PA2))
 
+#define STRIP_DATA_1() PORTA |= _BV(PA7)
+#define STRIP_DATA_0() PORTA &= ~_BV(PA7)
+#define STRIP_CLK_HIGH() PORTA |= _BV(PA6)
+#define STRIP_CLK_LOW() PORTA &= ~_BV(PA6)
+
+//#define STRIP_CHANGE() PORTA ^= _BV(PA7) | _BV(PA6)
+
+#define STRIP_INIT() DDRA |= _BV(PA6) | _BV(PA7);PORTB &= ~(_BV(PA6) | _BV(PA7))
+
+
 
 
 //#define LED_SENSOR_CHANGE() DDRA |= _BV(PA2);DDRB |= _BV(PB0);PORTB ^= _BV(PB0);PORTA &= ~_BV(PA2)

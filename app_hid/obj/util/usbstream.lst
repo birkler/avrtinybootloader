@@ -65,7 +65,7 @@
   52:../util/usbstream.c **** FILE usb_out_stream = FDEV_SETUP_STREAM2(usb_stream_putchar, NULL, _FDEV_SETUP_WRITE,&usb_out_strea
   53:../util/usbstream.c **** #ifdef USBSTREAM_ENABLE_RX
   54:../util/usbstream.c **** static usb_stream_buffer_in_t usb_in_stream_buffer;
-  55:../util/usbstream.c **** FILE usb_in_stream = FDEV_SETUP_STREAM2(usb_stream_putchar,usb_stream_getchar, _FDEV_SETUP_READ|_FD
+  55:../util/usbstream.c **** FILE usb_in_stream = FDEV_SETUP_STREAM2(NULL,usb_stream_getchar, _FDEV_SETUP_READ,&usb_in_stream_bu
   56:../util/usbstream.c **** #else
   57:../util/usbstream.c **** FILE usb_in_stream = FDEV_SETUP_STREAM2(NULL,usb_stream_getchar, _FDEV_SETUP_READ,NULL);
   58:../util/usbstream.c **** #endif
@@ -2700,25 +2700,25 @@
  2326               	.global __do_clear_bss
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 usbstream.c
-     /tmp/cc9vpsNT.s:2      *ABS*:000000000000003e __SP_H__
-     /tmp/cc9vpsNT.s:3      *ABS*:000000000000003d __SP_L__
-     /tmp/cc9vpsNT.s:4      *ABS*:000000000000003f __SREG__
-     /tmp/cc9vpsNT.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/cc9vpsNT.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/cc9vpsNT.s:11     .text:0000000000000000 usb_stream_init
-     /tmp/cc9vpsNT.s:349    .bss:0000000000000002 initialized
-     /tmp/cc9vpsNT.s:372    .bss:0000000000000003 usb_out_stream_buffer
-     /tmp/cc9vpsNT.s:57     .text:0000000000000032 usb_stream_putchar
-     /tmp/cc9vpsNT.s:107    .text:0000000000000054 usb_stream_getchar
-     /tmp/cc9vpsNT.s:150    .text:000000000000006e usbFunctionSetup
+     /tmp/cc16z95B.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc16z95B.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc16z95B.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc16z95B.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc16z95B.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc16z95B.s:11     .text:0000000000000000 usb_stream_init
+     /tmp/cc16z95B.s:349    .bss:0000000000000002 initialized
+     /tmp/cc16z95B.s:372    .bss:0000000000000003 usb_out_stream_buffer
+     /tmp/cc16z95B.s:57     .text:0000000000000032 usb_stream_putchar
+     /tmp/cc16z95B.s:107    .text:0000000000000054 usb_stream_getchar
+     /tmp/cc16z95B.s:150    .text:000000000000006e usbFunctionSetup
                              .bss:0000000000000000 usb_buf_report_id
-     /tmp/cc9vpsNT.s:347    .bss:0000000000000001 usb_buf_state
-     /tmp/cc9vpsNT.s:208    .text:00000000000000a6 usbFunctionRead2
-     /tmp/cc9vpsNT.s:222    .text:00000000000000aa usbFunctionRead
-     /tmp/cc9vpsNT.s:297    .text:00000000000000fa usbFunctionWrite2
-     /tmp/cc9vpsNT.s:315    .text:00000000000000fe usbFunctionWrite
-     /tmp/cc9vpsNT.s:354    .data:0000000000000000 usb_in_stream
-     /tmp/cc9vpsNT.s:364    .data:000000000000000e usb_out_stream
+     /tmp/cc16z95B.s:347    .bss:0000000000000001 usb_buf_state
+     /tmp/cc16z95B.s:208    .text:00000000000000a6 usbFunctionRead2
+     /tmp/cc16z95B.s:222    .text:00000000000000aa usbFunctionRead
+     /tmp/cc16z95B.s:297    .text:00000000000000fa usbFunctionWrite2
+     /tmp/cc16z95B.s:315    .text:00000000000000fe usbFunctionWrite
+     /tmp/cc16z95B.s:354    .data:0000000000000000 usb_in_stream
+     /tmp/cc16z95B.s:364    .data:000000000000000e usb_out_stream
 
 UNDEFINED SYMBOLS
 stream_putchar

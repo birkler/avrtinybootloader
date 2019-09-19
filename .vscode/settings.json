@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "usbstream.h": "c",
+        "hw.h": "c"
+    }
+}

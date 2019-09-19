@@ -52,7 +52,7 @@ static int usb_stream_getchar(FILE *stream);
 FILE usb_out_stream = FDEV_SETUP_STREAM2(usb_stream_putchar, NULL, _FDEV_SETUP_WRITE,&usb_out_stream_buffer);
 #ifdef USBSTREAM_ENABLE_RX
 static usb_stream_buffer_in_t usb_in_stream_buffer;
-FILE usb_in_stream = FDEV_SETUP_STREAM2(usb_stream_putchar,usb_stream_getchar, _FDEV_SETUP_READ|_FDEV_SETUP_WRITE,&usb_in_stream_buffer);
+FILE usb_in_stream = FDEV_SETUP_STREAM2(NULL,usb_stream_getchar, _FDEV_SETUP_READ,&usb_in_stream_buffer);
 #else
 FILE usb_in_stream = FDEV_SETUP_STREAM2(NULL,usb_stream_getchar, _FDEV_SETUP_READ,NULL);
 #endif

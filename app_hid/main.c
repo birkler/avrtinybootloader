@@ -1,14 +1,10 @@
 
 /*
- * Copyright 2007 Jorgen Birkler
  * jorgen.birkler)a(gmail.com
- * USB HID device for current monitoring and battery switch on-off
- * License: GNU GPL v2 (see License.txt) or proprietary (contact author)
  */
 
 /**
  * @mainpage
- *
  *
  * \section implementation_guide Implementation
  * - \ref software
@@ -24,7 +20,7 @@
 /**
  * \page software Software
  * Uses the firmware only USB low speed driver from http://obdev.at.
- * The USB device is configured as a Remote Control HID device.
+ * The USB device is configured as a Mouse HID device.
  *
  * \section tips Tips about HID development
  * General tips about HID development:
@@ -37,23 +33,10 @@
  * 2. Added usbconfig.h manually to the dependencies in the make file to all .o files.
  *    WinAVR .d files doesn't seem to work for subdirs
  *
- * Ir is received by ICP interrupt:
- * \include irrx.h
  *
- * Main loop translated the ir codes received and handles the main USB look:
- * \include main.c
  */
 /**
  * \page hardware Hardware
- *
- * Schematic:
- * \image html current_mon_switch.sch.png Schematic
- *
- * Partlist:
- * \verbinclude current_mon_switch.sch..parts.txt
- *
- * Board (for protoboards):
- * \image html current_mon_switch.brd.png
  *
  */
 
@@ -74,7 +57,6 @@
 #include "hw.h"
 #include "timers.h"
 #include "usbstream.h"
-//#include "uartsw.h"
 #include "lfsr8.h"
 #include "iir_filter.h"
 
@@ -87,25 +69,6 @@
 #define elements_of(array) (sizeof(array) / sizeof(array[0]))
 
 STATIC_ASSERT(((int8_t)(-8))>>1 < 0);
-/* ------------------------------------------------------------------------- */
-/* ------------------------------------------------------------------------- */
-/* ----------------------------- UART interface ----------------------------- */
-/* ------------------------------------------------------------------------- */
-/*
-static int uartsw_stream_putchar(char c, FILE *stream)
-{
-	//uartsw1_putc(c);
-	return c;
-}
-static int uartsw_stream_getchar(FILE *stream)
-{
-	return -1;//uartsw2_getc_nowait();
-}
-#define uartsw_init() (void)0
-
-FILE uartsw_stream = FDEV_SETUP_STREAM(uartsw_stream_putchar,uartsw_stream_getchar, _FDEV_SETUP_READ|_FDEV_SETUP_WRITE);
-
-*/
 
 /* ------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------- */
@@ -215,37 +178,197 @@ typedef struct {
 	uchar bufLen;
 } stdin_get_string_t;
 
-/*
-static const char* stdin_get_string(stdin_get_string_t* b)
-{
-	int c;
-	if ((c = getchar()) >= 0) {
-		if (c=='\b') {
-			if (b->bufLen > 0) {
-				b->bufLen--;
-				putchar(c); //echo back
-			}
-		}
-		else if (c=='\n') {
-			b->buffer[b->bufLen] = '\0';
-			putchar(c); //echo back
-			b->bufLen = 0;
-			return (const char*)b->buffer;
-		}
-		else if (c<20) {
 
-		}
-		else {
-			if (b->bufLen+1 < sizeof(b->buffer)) {
-				b->buffer[b->bufLen++] = (char)c;
-				putchar(c); //echo back
-			}
-		}
-	}
-	return 0;
+
+typedef uint8_t rgb332_t;
+
+/*
+static inline
+#define RGB888_RGB332(r,g,b)
+*/
+
+enum {
+	RED,GREEN,BLUE,COLORS
+};
+
+typedef struct RGB888_ {
+	uint8_t color_[COLORS];
+} RGB888;
+
+uint8_t unpack_color_red(rgb332_t rgb) {
+	uint8_t base = rgb >> 5;
+	base &= ~0b111;
+	uint8_t res = base << 5;
+	res |= base << 2;
+	res |= base >> 1;
+	return res;
 }
- */
+
+
+uint8_t unpack_color_green(rgb332_t rgb) {
+	uint8_t base = rgb >> 2;
+	base &= ~0b111;
+	uint8_t res = base << 5;
+	res |= base << 2;
+	res |= base >> 1;
+	return res;
+}
+
+uint8_t unpack_color_blue(rgb332_t rgb) {
+	uint8_t base = rgb;
+	base &= ~0b11;
+	uint8_t res = base << 6;
+	res |= base << 4;
+	res |= base << 2;
+	res |= base << 0;
+	return res;
+}
+#define nop() __builtin_avr_nop()  //asm volatile(" nop \n\t")
+
+
+void send_strip_byte(uint8_t byteval) {
+	uint8_t temp = byteval;
+	for (uint8_t i=0;i<8;++i) {
+		if (temp & 0b10000000) {
+			STRIP_DATA_1();
+		} else {
+			STRIP_DATA_0();
+		}
+		STRIP_CLK_HIGH();
+		temp <<=1;
+		STRIP_CLK_LOW();
+	}
+}
+
+
+
+void send_color(uint8_t r,uint8_t g,uint8_t b) {
+	const uint8_t start_byte = 0xFF;
+	send_strip_byte(start_byte);
+	send_strip_byte(r);
+	send_strip_byte(g);
+	send_strip_byte(b);
+}
+
+
 /* ------------------------------------------------------------------------- */
+
+
+RGB888 rainbow_colors[7] = {
+		{{200,0,200}},
+		{{200,0,0}},
+		{{200,200,0}},
+		{{0,200,0}},
+		{{0,200,200}},
+		{{0,0,200}},
+		{{200,0,200}}
+};
+
+
+RGB888 getRainbowColor(int index) {
+	//300/6 = 50 ~ 64
+	const int steps = 32;
+
+
+	int rainbow_index = index / steps;
+	rainbow_index %= 6;
+	int interpolate_index = index % steps;
+	int weight_from = 64-interpolate_index;
+	int weight_to = interpolate_index;
+
+	RGB888 from = rainbow_colors[rainbow_index];
+	RGB888 to = rainbow_colors[rainbow_index+1];
+
+	RGB888 res;
+	for (int c=0;c<COLORS;c++) {
+		uint16_t temp = from.color_[c] * weight_from + to.color_[c] * weight_to;
+		temp /= steps;
+		temp /= 2;
+		res.color_[c] = temp;
+	}
+	return res;
+}
+
+
+
+
+
+static void setColor(int numLedsOn, uint8_t r,uint8_t g,uint8_t b) {
+	const int totalLeds = 400;
+	send_strip_byte(0);
+	send_strip_byte(0);
+	send_strip_byte(0);
+	send_strip_byte(0);
+	send_strip_byte(0);
+
+	send_strip_byte(0);
+
+
+//	send_color(0,255,0);
+//	send_color(0,0,255);
+//	send_color(255,0,0);
+//	send_color(0,255,255);
+
+	for (int i=0;i<numLedsOn;i++) {
+		send_color(b,g,r);
+		send_color(0,0,0);
+		send_color(0,0,0);
+		send_color(0,0,0);
+		send_color(0,0,0);
+		send_color(0,0,0);
+	}
+	for (int i=0;i<totalLeds;i++) {
+		send_color(0,0,0);
+	}
+	for (int i=0;i<totalLeds;i++) {
+		send_strip_byte(0xFF);
+	}
+}
+
+
+static void setColorOneLed(int numLedOn, uint8_t r,uint8_t g,uint8_t b) {
+	const int totalLeds = 300;
+	send_strip_byte(0);
+	send_strip_byte(0);
+	send_strip_byte(0);
+	send_strip_byte(0);
+	send_strip_byte(0);
+
+//	send_color(0,255,0);
+//	send_color(0,0,255);
+//	send_color(255,0,0);
+//	send_color(0,255,255);
+
+	/*
+	for (int i=0;i<numLedOn;i++) {
+		send_color(b,g,r);
+		send_color(0,0,0);
+		send_color(0,0,0);
+		send_color(0,0,0);
+		send_color(0,0,0);
+	}*/
+	//send_color(b,g,r);
+	//send_color(b,g,r);
+	//send_color(b,g,r);
+	//send_color(b,g,r);
+	for (int i=0;i<totalLeds;i++) {
+		RGB888 rgb;
+		
+		if (i < numLedOn) {
+			rgb = getRainbowColor(i);
+		} else {
+			rgb.color_[0] = 0;
+			rgb.color_[1] = 0;
+			rgb.color_[2] = 0;
+		}
+		send_color(rgb.color_[RED],rgb.color_[GREEN],rgb.color_[BLUE]);
+	}
+	for (int i=0;i<totalLeds/2;i++) {
+		send_strip_byte(0x00);
+	}
+}
+
+
 
 int main(void)
 {
@@ -287,7 +410,6 @@ int main(void)
 	odDebugInit();
 	usbInit();
 	TIMER0_ENABLE_INPUTCAPT_INTERRUPT();
-	//uartsw_init();
 	sei();
 	usbDeviceConnect();
 	LED_RED_ON();
@@ -296,11 +418,6 @@ int main(void)
 	Timer_Set(TIMER_LED_BLINK,TIMER_LED_STARTUP_TIMEOUT);
 	Timer_Set(TIMER_LED_SENSOR_BLINK,2);
 	Timer_Set(TIMER_LED_BUTTON_BLINK,TIMER_LED_STARTUP_TIMEOUT);
-	//fprintf_P(&uartsw_stream,PSTR("B!\x10\n"));
-	/*char buffer[10];
-	if (strcmp_P(fgets(buffer,sizeof(buffer),&uartsw_stream),PSTR("B!\x10\n")) != 0) {
-		fprintf_P(&uartsw_stream,PSTR("Fail"));
-	}*/
 	filtered_val = filter_iir2(&filter_iir2_data,1000);
 	// main event loop
 	for (;;)
@@ -333,7 +450,7 @@ int main(void)
 			if (!(buttonPressed)) {
 				//uint16_t us = capture_diff * 1000000L / F_TIMER0;
 				//uint16_t us_max = capture_diff_max * 1000000L / F_TIMER0;
-				//printf_P(PSTR("stat diff=%u(%uus) max=%u(%uus) #=%u!\r\n"),capture_diff,us,capture_diff_max,us_max,captured);
+				printf_P(PSTR("Button!\r\n"));
 				//fprintf_P(&uartsw_stream,PSTR("stat diff=%u(%uus) max=%u(%uus) #=%u!\r\n"),capture_diff,us,capture_diff_max,us_max,captured);
 			}
 			buttonPressed = 1;
@@ -360,92 +477,16 @@ int main(void)
 			}
 
 		}
-		/*
-		int c;
-		if (0 && (c = fgetc(&uartsw_stream)) != -1) {
-			printf_P(PSTR("%c"),c);
-			//fprintf_P(&uartsw_stream,PSTR("%c"),c);
-		}
-		*/
-
-		//stdin_str = stdin_get_string(&stdin_get_string_buffer);
-		if (0 && getchar() >= 0) { //offending line...?
-			//if (strcmp_P(stdin_str,PSTR("stat")) == 0 )
-			{
-
-			}
-		}
-
-		//
-		///////////////////////////////////////////////////////
-
 
 		//LED Timer
 		/////////////////////////////////////////////////////
 		if (Timer_HasExpired(TIMER_LED_BLINK)) {
 			Timer_Set(TIMER_LED_BLINK,TIMER_LED_BLINK_TIMEOUT);
-			//LED_RED_CHANGE();
+			LED_RED_CHANGE();
 		}
 		if (Timer_HasExpired(TIMER_LED_BUTTON_BLINK)) {
 			Timer_Set(TIMER_LED_BUTTON_BLINK,TIMER_LED_BLINK_TIMEOUT/2);
-			//LED_BUTTON_CHANGE();
-		}
-		if (Timer_HasExpired(TIMER_LED_SENSOR_BLINK))
-		{
-			led_sensor_last_random = prng_lfsr1_1();
-			if (led_sensor_last_random & 0x1) {
-				LED_RED_ON();
-			}
-			else {
-				LED_RED_OFF();
-			}
-			Timer_Set(TIMER_LED_SENSOR_BLINK,100);
-			LED_SENSOR_ADC_SETUP();
-			//LED_SENSOR_ON();
-			//_delay_us(200);
-			//LED_SENSOR_REVERSE_BIAS();
-			//_delay_us(200);
-			LED_SENSOR_INPUT();
-
-			led_sensor_blink++;
-			if (led_sensor_nvalues > 0) {
-				led_sensor_weigthed_sum -= led_sensor_weigthed_sum_data[led_sensor_weigthed_sum_idx];
-				led_sensor_weigthed_sum_data[led_sensor_weigthed_sum_idx] = led_sensor_values[4];
-				led_sensor_weigthed_sum += led_sensor_weigthed_sum_data[led_sensor_weigthed_sum_idx];
-
-				led_sensor_weigthed_sum_idx++;
-				if (led_sensor_weigthed_sum_idx >= elements_of(led_sensor_weigthed_sum_data) ) {
-					led_sensor_weigthed_sum_idx = 0;
-				}
-
-
-				if ((led_sensor_blink & 0xF) == 0) {
-					printf("led adc[%d]:\t%05u: \t%05u,\t%05u\t%05u ticks:\t%06u\tfilt:%06d   \r",
-							led_sensor_nvalues,
-							led_sensor_weigthed_sum / elements_of(led_sensor_weigthed_sum_data) ,
-							led_sensor_values[2],
-							led_sensor_values[3],
-							led_sensor_values[4],
-							led_sensor_trig_time,
-							filtered_val);
-				}
-			}
-
-			led_sensor_delta_time = 0;
-			led_sensor_trig_time = 0;
-			led_sensor_nvalues = 0;
-			led_sensor_nsample = 2;
-		}
-
-		//Time measurement of LED sensor discharge
-		if (!LED_SENSOR_IS_HIGH()) {
-			LED_BUTTON_OFF();
-			if (led_sensor_trig_time == 0) {
-				led_sensor_trig_time = led_sensor_delta_time;
-			}
-		}
-		else {
-			LED_BUTTON_ON();
+			LED_BUTTON_CHANGE();
 		}
 
 
