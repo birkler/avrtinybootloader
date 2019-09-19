@@ -1,0 +1,1 @@
+A USB HID device to measure current and switch on-off a battery supply and/or USB connection. 

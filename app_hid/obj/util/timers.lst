@@ -1,0 +1,1306 @@
+   1               		.file	"timers.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	Timers_Init
+  11               		.type	Timers_Init, @function
+  12               	Timers_Init:
+  13               	.LFB0:
+  14               		.file 1 "../util/timers.c"
+   1:../util/timers.c **** /*********************************************************************
+   2:../util/timers.c ****  * Copyright 2003                                                    *
+   3:../util/timers.c ****  * Jorgen Birkler (birkler@yahoo.com)                                *
+   4:../util/timers.c ****  *********************************************************************/
+   5:../util/timers.c **** 
+   6:../util/timers.c **** #include "timers.h"
+   7:../util/timers.c **** //#include <util/atomic.h>
+   8:../util/timers.c **** 
+   9:../util/timers.c **** static volatile milliseconds_t Timers[TIMER_LAST];
+  10:../util/timers.c **** 
+  11:../util/timers.c **** #define ATOMIC_BLOCK(x)
+  12:../util/timers.c **** 
+  13:../util/timers.c **** void Timers_Init(void)
+  14:../util/timers.c **** {
+  15               		.loc 1 14 0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+  21               	.LVL0:
+  22               		.loc 1 14 0
+  23 0000 80E0      		ldi r24,0
+  24 0002 90E0      		ldi r25,0
+  15:../util/timers.c **** 	TimerId_t id;
+  16:../util/timers.c **** 	for (id=0; id < TIMER_LAST;id++)
+  17:../util/timers.c **** 	{
+  18:../util/timers.c ****     Timers[id]=TIMER_RESET;
+  25               		.loc 1 18 0
+  26 0004 2FEF      		ldi r18,lo8(-1)
+  27 0006 3FEF      		ldi r19,lo8(-1)
+  28               	.LVL1:
+  29               	.L2:
+  30               		.loc 1 18 0 is_stmt 0 discriminator 3
+  31 0008 FC01      		movw r30,r24
+  32 000a EE0F      		lsl r30
+  33 000c FF1F      		rol r31
+  34 000e E050      		subi r30,lo8(-(Timers))
+  35 0010 F040      		sbci r31,hi8(-(Timers))
+  36 0012 3183      		std Z+1,r19
+  37 0014 2083      		st Z,r18
+  38               	.LVL2:
+  39 0016 0196      		adiw r24,1
+  40               	.LVL3:
+  16:../util/timers.c **** 	{
+  41               		.loc 1 16 0 is_stmt 1 discriminator 3
+  42 0018 8830      		cpi r24,8
+  43 001a 9105      		cpc r25,__zero_reg__
+  44 001c 01F4      		brne .L2
+  45               	/* epilogue start */
+  19:../util/timers.c ****   }
+  20:../util/timers.c **** }
+  46               		.loc 1 20 0
+  47 001e 0895      		ret
+  48               		.cfi_endproc
+  49               	.LFE0:
+  50               		.size	Timers_Init, .-Timers_Init
+  51               	.global	Timers_DecreaseAll
+  52               		.type	Timers_DecreaseAll, @function
+  53               	Timers_DecreaseAll:
+  54               	.LFB1:
+  21:../util/timers.c **** 
+  22:../util/timers.c **** milliseconds_t Timers_DecreaseAll(milliseconds_x256_t delta_x256)
+  23:../util/timers.c **** {
+  55               		.loc 1 23 0
+  56               		.cfi_startproc
+  57               	.LVL4:
+  58 0020 CF93      		push r28
+  59               	.LCFI0:
+  60               		.cfi_def_cfa_offset 3
+  61               		.cfi_offset 28, -2
+  62               	/* prologue: function */
+  63               	/* frame size = 0 */
+  64               	/* stack size = 1 */
+  65               	.L__stack_usage = 1
+  66               	.LVL5:
+  24:../util/timers.c **** 	static unsigned char frag = 0;
+  25:../util/timers.c **** 	TimerId_t id;
+  26:../util/timers.c **** 	milliseconds_t nextTime = TIMER_RESET;
+  27:../util/timers.c **** 	delta_x256 += frag;
+  67               		.loc 1 27 0
+  68 0022 2091 0000 		lds r18,frag.1471
+  69 0026 820F      		add r24,r18
+  70 0028 911D      		adc r25,__zero_reg__
+  71               	.LVL6:
+  28:../util/timers.c **** 	frag = delta_x256 & 0xFF;
+  72               		.loc 1 28 0
+  73 002a 8093 0000 		sts frag.1471,r24
+  29:../util/timers.c **** 	milliseconds_t delta = delta_x256>>8;
+  74               		.loc 1 29 0
+  75 002e 492F      		mov r20,r25
+  76 0030 5527      		clr r21
+  77               	.LVL7:
+  78 0032 60E0      		ldi r22,0
+  79 0034 70E0      		ldi r23,0
+  26:../util/timers.c **** 	delta_x256 += frag;
+  80               		.loc 1 26 0
+  81 0036 8FEF      		ldi r24,lo8(-1)
+  82 0038 9FEF      		ldi r25,lo8(-1)
+  83               	.LVL8:
+  84               	.L9:
+  85               	.LBB2:
+  30:../util/timers.c **** 	for (id=0; id < TIMER_LAST;id++)
+  31:../util/timers.c **** 	{
+  32:../util/timers.c **** 		milliseconds_t tempTime = Timers[id];
+  86               		.loc 1 32 0
+  87 003a FB01      		movw r30,r22
+  88 003c EE0F      		lsl r30
+  89 003e FF1F      		rol r31
+  90 0040 DF01      		movw r26,r30
+  91 0042 A050      		subi r26,lo8(-(Timers))
+  92 0044 B040      		sbci r27,hi8(-(Timers))
+  93 0046 2D91      		ld r18,X+
+  94 0048 3C91      		ld r19,X
+  95 004a 1197      		sbiw r26,1
+  96               	.LVL9:
+  33:../util/timers.c **** 		if (tempTime != TIMER_RESET)
+  97               		.loc 1 33 0
+  98 004c 2F3F      		cpi r18,-1
+  99 004e CFEF      		ldi r28,-1
+ 100 0050 3C07      		cpc r19,r28
+ 101 0052 01F0      		breq .L6
+  34:../util/timers.c **** 		{
+  35:../util/timers.c **** 			if (tempTime > delta)
+ 102               		.loc 1 35 0
+ 103 0054 4217      		cp r20,r18
+ 104 0056 5307      		cpc r21,r19
+ 105 0058 00F4      		brsh .L7
+  36:../util/timers.c **** 			{
+  37:../util/timers.c **** 				tempTime-=delta;
+ 106               		.loc 1 37 0
+ 107 005a 241B      		sub r18,r20
+ 108 005c 350B      		sbc r19,r21
+ 109               	.LVL10:
+ 110 005e 2817      		cp r18,r24
+ 111 0060 3907      		cpc r19,r25
+ 112 0062 00F4      		brsh .L8
+ 113 0064 C901      		movw r24,r18
+ 114               	.LVL11:
+ 115               	.L8:
+  38:../util/timers.c **** 
+  39:../util/timers.c **** 				if (tempTime < nextTime) 
+  40:../util/timers.c **** 				{
+  41:../util/timers.c **** 					nextTime = tempTime;
+  42:../util/timers.c **** 				}
+  43:../util/timers.c **** 
+  44:../util/timers.c **** 				Timers[id] = tempTime;
+ 116               		.loc 1 44 0
+ 117 0066 E050      		subi r30,lo8(-(Timers))
+ 118 0068 F040      		sbci r31,hi8(-(Timers))
+ 119 006a 3183      		std Z+1,r19
+ 120 006c 2083      		st Z,r18
+ 121 006e 00C0      		rjmp .L6
+ 122               	.L7:
+  45:../util/timers.c **** 			}
+  46:../util/timers.c **** 			else {
+  47:../util/timers.c **** 				Timers[id] = TIMER_HAS_EXPIRED;
+ 123               		.loc 1 47 0
+ 124 0070 1196      		adiw r26,1
+ 125 0072 1C92      		st X,__zero_reg__
+ 126 0074 1E92      		st -X,__zero_reg__
+ 127               	.L6:
+ 128               	.LVL12:
+ 129 0076 6F5F      		subi r22,-1
+ 130 0078 7F4F      		sbci r23,-1
+ 131               	.LVL13:
+ 132               	.LBE2:
+  30:../util/timers.c **** 	{
+ 133               		.loc 1 30 0 discriminator 2
+ 134 007a 6830      		cpi r22,8
+ 135 007c 7105      		cpc r23,__zero_reg__
+ 136 007e 01F4      		brne .L9
+ 137               	/* epilogue start */
+  48:../util/timers.c **** 			}
+  49:../util/timers.c **** 		}
+  50:../util/timers.c **** 	}
+  51:../util/timers.c **** 	return nextTime;
+  52:../util/timers.c **** }
+ 138               		.loc 1 52 0
+ 139 0080 CF91      		pop r28
+ 140 0082 0895      		ret
+ 141               		.cfi_endproc
+ 142               	.LFE1:
+ 143               		.size	Timers_DecreaseAll, .-Timers_DecreaseAll
+ 144               	.global	Timer_HasExpired
+ 145               		.type	Timer_HasExpired, @function
+ 146               	Timer_HasExpired:
+ 147               	.LFB2:
+  53:../util/timers.c **** 
+  54:../util/timers.c **** 
+  55:../util/timers.c **** int Timer_HasExpired(const TimerId_t TimerId)
+  56:../util/timers.c **** {
+ 148               		.loc 1 56 0
+ 149               		.cfi_startproc
+ 150               	.LVL14:
+ 151               	/* prologue: function */
+ 152               	/* frame size = 0 */
+ 153               	/* stack size = 0 */
+ 154               	.L__stack_usage = 0
+  57:../util/timers.c **** 	int result;
+  58:../util/timers.c **** 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+  59:../util/timers.c **** 	{
+  60:../util/timers.c **** 		if (Timers[TimerId]==TIMER_HAS_EXPIRED)
+ 155               		.loc 1 60 0
+ 156 0084 E82F      		mov r30,r24
+ 157 0086 F0E0      		ldi r31,0
+ 158 0088 EE0F      		lsl r30
+ 159 008a FF1F      		rol r31
+ 160               	.LVL15:
+ 161 008c E050      		subi r30,lo8(-(Timers))
+ 162 008e F040      		sbci r31,hi8(-(Timers))
+ 163 0090 8081      		ld r24,Z
+ 164 0092 9181      		ldd r25,Z+1
+ 165 0094 892B      		or r24,r25
+ 166 0096 01F4      		brne .L16
+  61:../util/timers.c **** 		{
+  62:../util/timers.c **** 			Timers[TimerId]=TIMER_RESET;
+ 167               		.loc 1 62 0
+ 168 0098 8FEF      		ldi r24,lo8(-1)
+ 169 009a 9FEF      		ldi r25,lo8(-1)
+ 170 009c 9183      		std Z+1,r25
+ 171 009e 8083      		st Z,r24
+ 172               	.LVL16:
+  63:../util/timers.c **** 			result = 1;
+ 173               		.loc 1 63 0
+ 174 00a0 81E0      		ldi r24,lo8(1)
+ 175 00a2 90E0      		ldi r25,0
+ 176 00a4 0895      		ret
+ 177               	.LVL17:
+ 178               	.L16:
+  64:../util/timers.c **** 		}
+  65:../util/timers.c **** 		else {
+  66:../util/timers.c **** 			result = 0;
+ 179               		.loc 1 66 0
+ 180 00a6 80E0      		ldi r24,0
+ 181 00a8 90E0      		ldi r25,0
+ 182               	.LVL18:
+  67:../util/timers.c **** 		}
+  68:../util/timers.c **** 	}
+  69:../util/timers.c **** 	return result;
+  70:../util/timers.c **** }
+ 183               		.loc 1 70 0
+ 184 00aa 0895      		ret
+ 185               		.cfi_endproc
+ 186               	.LFE2:
+ 187               		.size	Timer_HasExpired, .-Timer_HasExpired
+ 188               	.global	Timer_Reset
+ 189               		.type	Timer_Reset, @function
+ 190               	Timer_Reset:
+ 191               	.LFB3:
+  71:../util/timers.c **** 
+  72:../util/timers.c **** void Timer_Reset(const TimerId_t TimerId)
+  73:../util/timers.c **** {
+ 192               		.loc 1 73 0
+ 193               		.cfi_startproc
+ 194               	.LVL19:
+ 195               	/* prologue: function */
+ 196               	/* frame size = 0 */
+ 197               	/* stack size = 0 */
+ 198               	.L__stack_usage = 0
+  74:../util/timers.c **** 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+  75:../util/timers.c **** 	{
+  76:../util/timers.c **** 		Timers[TimerId]=TIMER_RESET;
+ 199               		.loc 1 76 0
+ 200 00ac E82F      		mov r30,r24
+ 201 00ae F0E0      		ldi r31,0
+ 202 00b0 EE0F      		lsl r30
+ 203 00b2 FF1F      		rol r31
+ 204               	.LVL20:
+ 205 00b4 E050      		subi r30,lo8(-(Timers))
+ 206 00b6 F040      		sbci r31,hi8(-(Timers))
+ 207 00b8 8FEF      		ldi r24,lo8(-1)
+ 208 00ba 9FEF      		ldi r25,lo8(-1)
+ 209 00bc 9183      		std Z+1,r25
+ 210 00be 8083      		st Z,r24
+ 211 00c0 0895      		ret
+ 212               		.cfi_endproc
+ 213               	.LFE3:
+ 214               		.size	Timer_Reset, .-Timer_Reset
+ 215               	.global	Timer_SetExpired
+ 216               		.type	Timer_SetExpired, @function
+ 217               	Timer_SetExpired:
+ 218               	.LFB4:
+  77:../util/timers.c **** 	}
+  78:../util/timers.c **** }
+  79:../util/timers.c **** void Timer_SetExpired(const TimerId_t TimerId)
+  80:../util/timers.c **** {
+ 219               		.loc 1 80 0
+ 220               		.cfi_startproc
+ 221               	.LVL21:
+ 222               	/* prologue: function */
+ 223               	/* frame size = 0 */
+ 224               	/* stack size = 0 */
+ 225               	.L__stack_usage = 0
+  81:../util/timers.c **** 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+  82:../util/timers.c **** 	{
+  83:../util/timers.c **** 		Timers[TimerId]=TIMER_HAS_EXPIRED;
+ 226               		.loc 1 83 0
+ 227 00c2 E82F      		mov r30,r24
+ 228 00c4 F0E0      		ldi r31,0
+ 229 00c6 EE0F      		lsl r30
+ 230 00c8 FF1F      		rol r31
+ 231               	.LVL22:
+ 232 00ca E050      		subi r30,lo8(-(Timers))
+ 233 00cc F040      		sbci r31,hi8(-(Timers))
+ 234 00ce 1182      		std Z+1,__zero_reg__
+ 235 00d0 1082      		st Z,__zero_reg__
+ 236 00d2 0895      		ret
+ 237               		.cfi_endproc
+ 238               	.LFE4:
+ 239               		.size	Timer_SetExpired, .-Timer_SetExpired
+ 240               	.global	Timer_Set
+ 241               		.type	Timer_Set, @function
+ 242               	Timer_Set:
+ 243               	.LFB5:
+  84:../util/timers.c **** 	}
+  85:../util/timers.c **** }
+  86:../util/timers.c **** 
+  87:../util/timers.c **** 
+  88:../util/timers.c **** void Timer_Set(const TimerId_t TimerId,const milliseconds_t setTimeout)
+  89:../util/timers.c **** {
+ 244               		.loc 1 89 0
+ 245               		.cfi_startproc
+ 246               	.LVL23:
+ 247               	/* prologue: function */
+ 248               	/* frame size = 0 */
+ 249               	/* stack size = 0 */
+ 250               	.L__stack_usage = 0
+  90:../util/timers.c **** 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+  91:../util/timers.c **** 	{
+  92:../util/timers.c **** 		Timers[TimerId]=setTimeout;
+ 251               		.loc 1 92 0
+ 252 00d4 E82F      		mov r30,r24
+ 253 00d6 F0E0      		ldi r31,0
+ 254 00d8 EE0F      		lsl r30
+ 255 00da FF1F      		rol r31
+ 256               	.LVL24:
+ 257 00dc E050      		subi r30,lo8(-(Timers))
+ 258 00de F040      		sbci r31,hi8(-(Timers))
+ 259 00e0 7183      		std Z+1,r23
+ 260 00e2 6083      		st Z,r22
+ 261 00e4 0895      		ret
+ 262               		.cfi_endproc
+ 263               	.LFE5:
+ 264               		.size	Timer_Set, .-Timer_Set
+ 265               		.local	frag.1471
+ 266               		.comm	frag.1471,1,1
+ 267               		.local	Timers
+ 268               		.comm	Timers,16,1
+ 269               	.Letext0:
+ 270               		.file 2 "../util/timers.h"
+ 271               		.file 3 "./timer_ids.h"
+ 272               		.section	.debug_info,"",@progbits
+ 273               	.Ldebug_info0:
+ 274 0000 5702 0000 		.long	0x257
+ 275 0004 0200      		.word	0x2
+ 276 0006 0000 0000 		.long	.Ldebug_abbrev0
+ 277 000a 04        		.byte	0x4
+ 278 000b 01        		.uleb128 0x1
+ 279 000c 0000 0000 		.long	.LASF30
+ 280 0010 0C        		.byte	0xc
+ 281 0011 0000 0000 		.long	.LASF31
+ 282 0015 0000 0000 		.long	.LASF32
+ 283 0019 0000 0000 		.long	.Ltext0
+ 284 001d 0000 0000 		.long	.Letext0
+ 285 0021 0000 0000 		.long	.Ldebug_line0
+ 286 0025 02        		.uleb128 0x2
+ 287 0026 01        		.byte	0x1
+ 288 0027 6800 0000 		.long	0x68
+ 289 002b 03        		.byte	0x3
+ 290 002c 12        		.byte	0x12
+ 291 002d 6800 0000 		.long	0x68
+ 292 0031 03        		.uleb128 0x3
+ 293 0032 0000 0000 		.long	.LASF0
+ 294 0036 00        		.byte	0
+ 295 0037 03        		.uleb128 0x3
+ 296 0038 0000 0000 		.long	.LASF1
+ 297 003c 01        		.byte	0x1
+ 298 003d 03        		.uleb128 0x3
+ 299 003e 0000 0000 		.long	.LASF2
+ 300 0042 02        		.byte	0x2
+ 301 0043 03        		.uleb128 0x3
+ 302 0044 0000 0000 		.long	.LASF3
+ 303 0048 03        		.byte	0x3
+ 304 0049 03        		.uleb128 0x3
+ 305 004a 0000 0000 		.long	.LASF4
+ 306 004e 04        		.byte	0x4
+ 307 004f 03        		.uleb128 0x3
+ 308 0050 0000 0000 		.long	.LASF5
+ 309 0054 05        		.byte	0x5
+ 310 0055 03        		.uleb128 0x3
+ 311 0056 0000 0000 		.long	.LASF6
+ 312 005a 06        		.byte	0x6
+ 313 005b 03        		.uleb128 0x3
+ 314 005c 0000 0000 		.long	.LASF7
+ 315 0060 07        		.byte	0x7
+ 316 0061 03        		.uleb128 0x3
+ 317 0062 0000 0000 		.long	.LASF8
+ 318 0066 08        		.byte	0x8
+ 319 0067 00        		.byte	0
+ 320 0068 04        		.uleb128 0x4
+ 321 0069 01        		.byte	0x1
+ 322 006a 08        		.byte	0x8
+ 323 006b 0000 0000 		.long	.LASF9
+ 324 006f 05        		.uleb128 0x5
+ 325 0070 0000 0000 		.long	.LASF11
+ 326 0074 02        		.byte	0x2
+ 327 0075 0E        		.byte	0xe
+ 328 0076 7A00 0000 		.long	0x7a
+ 329 007a 04        		.uleb128 0x4
+ 330 007b 02        		.byte	0x2
+ 331 007c 07        		.byte	0x7
+ 332 007d 0000 0000 		.long	.LASF10
+ 333 0081 05        		.uleb128 0x5
+ 334 0082 0000 0000 		.long	.LASF12
+ 335 0086 02        		.byte	0x2
+ 336 0087 0F        		.byte	0xf
+ 337 0088 7A00 0000 		.long	0x7a
+ 338 008c 05        		.uleb128 0x5
+ 339 008d 0000 0000 		.long	.LASF13
+ 340 0091 02        		.byte	0x2
+ 341 0092 10        		.byte	0x10
+ 342 0093 6800 0000 		.long	0x68
+ 343 0097 06        		.uleb128 0x6
+ 344 0098 01        		.byte	0x1
+ 345 0099 0000 0000 		.long	.LASF23
+ 346 009d 01        		.byte	0x1
+ 347 009e 0D        		.byte	0xd
+ 348 009f 01        		.byte	0x1
+ 349 00a0 0000 0000 		.long	.LFB0
+ 350 00a4 0000 0000 		.long	.LFE0
+ 351 00a8 03        		.byte	0x3
+ 352 00a9 92        		.byte	0x92
+ 353 00aa 20        		.uleb128 0x20
+ 354 00ab 02        		.sleb128 2
+ 355 00ac 01        		.byte	0x1
+ 356 00ad C000 0000 		.long	0xc0
+ 357 00b1 07        		.uleb128 0x7
+ 358 00b2 6964 00   		.string	"id"
+ 359 00b5 01        		.byte	0x1
+ 360 00b6 0F        		.byte	0xf
+ 361 00b7 8C00 0000 		.long	0x8c
+ 362 00bb 0000 0000 		.long	.LLST0
+ 363 00bf 00        		.byte	0
+ 364 00c0 08        		.uleb128 0x8
+ 365 00c1 01        		.byte	0x1
+ 366 00c2 0000 0000 		.long	.LASF18
+ 367 00c6 01        		.byte	0x1
+ 368 00c7 16        		.byte	0x16
+ 369 00c8 01        		.byte	0x1
+ 370 00c9 6F00 0000 		.long	0x6f
+ 371 00cd 0000 0000 		.long	.LFB1
+ 372 00d1 0000 0000 		.long	.LFE1
+ 373 00d5 0000 0000 		.long	.LLST1
+ 374 00d9 01        		.byte	0x1
+ 375 00da 4A01 0000 		.long	0x14a
+ 376 00de 09        		.uleb128 0x9
+ 377 00df 0000 0000 		.long	.LASF20
+ 378 00e3 01        		.byte	0x1
+ 379 00e4 16        		.byte	0x16
+ 380 00e5 8100 0000 		.long	0x81
+ 381 00e9 0000 0000 		.long	.LLST2
+ 382 00ed 0A        		.uleb128 0xa
+ 383 00ee 0000 0000 		.long	.LASF14
+ 384 00f2 01        		.byte	0x1
+ 385 00f3 18        		.byte	0x18
+ 386 00f4 6800 0000 		.long	0x68
+ 387 00f8 05        		.byte	0x5
+ 388 00f9 03        		.byte	0x3
+ 389 00fa 0000 0000 		.long	frag.1471
+ 390 00fe 07        		.uleb128 0x7
+ 391 00ff 6964 00   		.string	"id"
+ 392 0102 01        		.byte	0x1
+ 393 0103 19        		.byte	0x19
+ 394 0104 8C00 0000 		.long	0x8c
+ 395 0108 0000 0000 		.long	.LLST3
+ 396 010c 0B        		.uleb128 0xb
+ 397 010d 0000 0000 		.long	.LASF15
+ 398 0111 01        		.byte	0x1
+ 399 0112 1A        		.byte	0x1a
+ 400 0113 6F00 0000 		.long	0x6f
+ 401 0117 0000 0000 		.long	.LLST4
+ 402 011b 0A        		.uleb128 0xa
+ 403 011c 0000 0000 		.long	.LASF16
+ 404 0120 01        		.byte	0x1
+ 405 0121 1D        		.byte	0x1d
+ 406 0122 6F00 0000 		.long	0x6f
+ 407 0126 06        		.byte	0x6
+ 408 0127 64        		.byte	0x64
+ 409 0128 93        		.byte	0x93
+ 410 0129 01        		.uleb128 0x1
+ 411 012a 65        		.byte	0x65
+ 412 012b 93        		.byte	0x93
+ 413 012c 01        		.uleb128 0x1
+ 414 012d 0C        		.uleb128 0xc
+ 415 012e 0000 0000 		.long	.LBB2
+ 416 0132 0000 0000 		.long	.LBE2
+ 417 0136 0A        		.uleb128 0xa
+ 418 0137 0000 0000 		.long	.LASF17
+ 419 013b 01        		.byte	0x1
+ 420 013c 20        		.byte	0x20
+ 421 013d 6F00 0000 		.long	0x6f
+ 422 0141 06        		.byte	0x6
+ 423 0142 62        		.byte	0x62
+ 424 0143 93        		.byte	0x93
+ 425 0144 01        		.uleb128 0x1
+ 426 0145 63        		.byte	0x63
+ 427 0146 93        		.byte	0x93
+ 428 0147 01        		.uleb128 0x1
+ 429 0148 00        		.byte	0
+ 430 0149 00        		.byte	0
+ 431 014a 0D        		.uleb128 0xd
+ 432 014b 01        		.byte	0x1
+ 433 014c 0000 0000 		.long	.LASF19
+ 434 0150 01        		.byte	0x1
+ 435 0151 37        		.byte	0x37
+ 436 0152 01        		.byte	0x1
+ 437 0153 8701 0000 		.long	0x187
+ 438 0157 0000 0000 		.long	.LFB2
+ 439 015b 0000 0000 		.long	.LFE2
+ 440 015f 03        		.byte	0x3
+ 441 0160 92        		.byte	0x92
+ 442 0161 20        		.uleb128 0x20
+ 443 0162 02        		.sleb128 2
+ 444 0163 01        		.byte	0x1
+ 445 0164 8701 0000 		.long	0x187
+ 446 0168 09        		.uleb128 0x9
+ 447 0169 0000 0000 		.long	.LASF21
+ 448 016d 01        		.byte	0x1
+ 449 016e 37        		.byte	0x37
+ 450 016f 8E01 0000 		.long	0x18e
+ 451 0173 0000 0000 		.long	.LLST5
+ 452 0177 0B        		.uleb128 0xb
+ 453 0178 0000 0000 		.long	.LASF22
+ 454 017c 01        		.byte	0x1
+ 455 017d 39        		.byte	0x39
+ 456 017e 8701 0000 		.long	0x187
+ 457 0182 0000 0000 		.long	.LLST6
+ 458 0186 00        		.byte	0
+ 459 0187 0E        		.uleb128 0xe
+ 460 0188 02        		.byte	0x2
+ 461 0189 05        		.byte	0x5
+ 462 018a 696E 7400 		.string	"int"
+ 463 018e 0F        		.uleb128 0xf
+ 464 018f 8C00 0000 		.long	0x8c
+ 465 0193 06        		.uleb128 0x6
+ 466 0194 01        		.byte	0x1
+ 467 0195 0000 0000 		.long	.LASF24
+ 468 0199 01        		.byte	0x1
+ 469 019a 48        		.byte	0x48
+ 470 019b 01        		.byte	0x1
+ 471 019c 0000 0000 		.long	.LFB3
+ 472 01a0 0000 0000 		.long	.LFE3
+ 473 01a4 03        		.byte	0x3
+ 474 01a5 92        		.byte	0x92
+ 475 01a6 20        		.uleb128 0x20
+ 476 01a7 02        		.sleb128 2
+ 477 01a8 01        		.byte	0x1
+ 478 01a9 BD01 0000 		.long	0x1bd
+ 479 01ad 09        		.uleb128 0x9
+ 480 01ae 0000 0000 		.long	.LASF21
+ 481 01b2 01        		.byte	0x1
+ 482 01b3 48        		.byte	0x48
+ 483 01b4 8E01 0000 		.long	0x18e
+ 484 01b8 0000 0000 		.long	.LLST7
+ 485 01bc 00        		.byte	0
+ 486 01bd 06        		.uleb128 0x6
+ 487 01be 01        		.byte	0x1
+ 488 01bf 0000 0000 		.long	.LASF25
+ 489 01c3 01        		.byte	0x1
+ 490 01c4 4F        		.byte	0x4f
+ 491 01c5 01        		.byte	0x1
+ 492 01c6 0000 0000 		.long	.LFB4
+ 493 01ca 0000 0000 		.long	.LFE4
+ 494 01ce 03        		.byte	0x3
+ 495 01cf 92        		.byte	0x92
+ 496 01d0 20        		.uleb128 0x20
+ 497 01d1 02        		.sleb128 2
+ 498 01d2 01        		.byte	0x1
+ 499 01d3 E701 0000 		.long	0x1e7
+ 500 01d7 09        		.uleb128 0x9
+ 501 01d8 0000 0000 		.long	.LASF21
+ 502 01dc 01        		.byte	0x1
+ 503 01dd 4F        		.byte	0x4f
+ 504 01de 8E01 0000 		.long	0x18e
+ 505 01e2 0000 0000 		.long	.LLST8
+ 506 01e6 00        		.byte	0
+ 507 01e7 06        		.uleb128 0x6
+ 508 01e8 01        		.byte	0x1
+ 509 01e9 0000 0000 		.long	.LASF26
+ 510 01ed 01        		.byte	0x1
+ 511 01ee 58        		.byte	0x58
+ 512 01ef 01        		.byte	0x1
+ 513 01f0 0000 0000 		.long	.LFB5
+ 514 01f4 0000 0000 		.long	.LFE5
+ 515 01f8 03        		.byte	0x3
+ 516 01f9 92        		.byte	0x92
+ 517 01fa 20        		.uleb128 0x20
+ 518 01fb 02        		.sleb128 2
+ 519 01fc 01        		.byte	0x1
+ 520 01fd 2302 0000 		.long	0x223
+ 521 0201 09        		.uleb128 0x9
+ 522 0202 0000 0000 		.long	.LASF21
+ 523 0206 01        		.byte	0x1
+ 524 0207 58        		.byte	0x58
+ 525 0208 8E01 0000 		.long	0x18e
+ 526 020c 0000 0000 		.long	.LLST9
+ 527 0210 10        		.uleb128 0x10
+ 528 0211 0000 0000 		.long	.LASF27
+ 529 0215 01        		.byte	0x1
+ 530 0216 58        		.byte	0x58
+ 531 0217 2302 0000 		.long	0x223
+ 532 021b 06        		.byte	0x6
+ 533 021c 66        		.byte	0x66
+ 534 021d 93        		.byte	0x93
+ 535 021e 01        		.uleb128 0x1
+ 536 021f 67        		.byte	0x67
+ 537 0220 93        		.byte	0x93
+ 538 0221 01        		.uleb128 0x1
+ 539 0222 00        		.byte	0
+ 540 0223 0F        		.uleb128 0xf
+ 541 0224 6F00 0000 		.long	0x6f
+ 542 0228 11        		.uleb128 0x11
+ 543 0229 3F02 0000 		.long	0x23f
+ 544 022d 3802 0000 		.long	0x238
+ 545 0231 12        		.uleb128 0x12
+ 546 0232 3802 0000 		.long	0x238
+ 547 0236 07        		.byte	0x7
+ 548 0237 00        		.byte	0
+ 549 0238 04        		.uleb128 0x4
+ 550 0239 02        		.byte	0x2
+ 551 023a 07        		.byte	0x7
+ 552 023b 0000 0000 		.long	.LASF28
+ 553 023f 13        		.uleb128 0x13
+ 554 0240 6F00 0000 		.long	0x6f
+ 555 0244 0A        		.uleb128 0xa
+ 556 0245 0000 0000 		.long	.LASF29
+ 557 0249 01        		.byte	0x1
+ 558 024a 09        		.byte	0x9
+ 559 024b 5502 0000 		.long	0x255
+ 560 024f 05        		.byte	0x5
+ 561 0250 03        		.byte	0x3
+ 562 0251 0000 0000 		.long	Timers
+ 563 0255 13        		.uleb128 0x13
+ 564 0256 2802 0000 		.long	0x228
+ 565 025a 00        		.byte	0
+ 566               		.section	.debug_abbrev,"",@progbits
+ 567               	.Ldebug_abbrev0:
+ 568 0000 01        		.uleb128 0x1
+ 569 0001 11        		.uleb128 0x11
+ 570 0002 01        		.byte	0x1
+ 571 0003 25        		.uleb128 0x25
+ 572 0004 0E        		.uleb128 0xe
+ 573 0005 13        		.uleb128 0x13
+ 574 0006 0B        		.uleb128 0xb
+ 575 0007 03        		.uleb128 0x3
+ 576 0008 0E        		.uleb128 0xe
+ 577 0009 1B        		.uleb128 0x1b
+ 578 000a 0E        		.uleb128 0xe
+ 579 000b 11        		.uleb128 0x11
+ 580 000c 01        		.uleb128 0x1
+ 581 000d 12        		.uleb128 0x12
+ 582 000e 01        		.uleb128 0x1
+ 583 000f 10        		.uleb128 0x10
+ 584 0010 06        		.uleb128 0x6
+ 585 0011 00        		.byte	0
+ 586 0012 00        		.byte	0
+ 587 0013 02        		.uleb128 0x2
+ 588 0014 04        		.uleb128 0x4
+ 589 0015 01        		.byte	0x1
+ 590 0016 0B        		.uleb128 0xb
+ 591 0017 0B        		.uleb128 0xb
+ 592 0018 49        		.uleb128 0x49
+ 593 0019 13        		.uleb128 0x13
+ 594 001a 3A        		.uleb128 0x3a
+ 595 001b 0B        		.uleb128 0xb
+ 596 001c 3B        		.uleb128 0x3b
+ 597 001d 0B        		.uleb128 0xb
+ 598 001e 01        		.uleb128 0x1
+ 599 001f 13        		.uleb128 0x13
+ 600 0020 00        		.byte	0
+ 601 0021 00        		.byte	0
+ 602 0022 03        		.uleb128 0x3
+ 603 0023 28        		.uleb128 0x28
+ 604 0024 00        		.byte	0
+ 605 0025 03        		.uleb128 0x3
+ 606 0026 0E        		.uleb128 0xe
+ 607 0027 1C        		.uleb128 0x1c
+ 608 0028 0B        		.uleb128 0xb
+ 609 0029 00        		.byte	0
+ 610 002a 00        		.byte	0
+ 611 002b 04        		.uleb128 0x4
+ 612 002c 24        		.uleb128 0x24
+ 613 002d 00        		.byte	0
+ 614 002e 0B        		.uleb128 0xb
+ 615 002f 0B        		.uleb128 0xb
+ 616 0030 3E        		.uleb128 0x3e
+ 617 0031 0B        		.uleb128 0xb
+ 618 0032 03        		.uleb128 0x3
+ 619 0033 0E        		.uleb128 0xe
+ 620 0034 00        		.byte	0
+ 621 0035 00        		.byte	0
+ 622 0036 05        		.uleb128 0x5
+ 623 0037 16        		.uleb128 0x16
+ 624 0038 00        		.byte	0
+ 625 0039 03        		.uleb128 0x3
+ 626 003a 0E        		.uleb128 0xe
+ 627 003b 3A        		.uleb128 0x3a
+ 628 003c 0B        		.uleb128 0xb
+ 629 003d 3B        		.uleb128 0x3b
+ 630 003e 0B        		.uleb128 0xb
+ 631 003f 49        		.uleb128 0x49
+ 632 0040 13        		.uleb128 0x13
+ 633 0041 00        		.byte	0
+ 634 0042 00        		.byte	0
+ 635 0043 06        		.uleb128 0x6
+ 636 0044 2E        		.uleb128 0x2e
+ 637 0045 01        		.byte	0x1
+ 638 0046 3F        		.uleb128 0x3f
+ 639 0047 0C        		.uleb128 0xc
+ 640 0048 03        		.uleb128 0x3
+ 641 0049 0E        		.uleb128 0xe
+ 642 004a 3A        		.uleb128 0x3a
+ 643 004b 0B        		.uleb128 0xb
+ 644 004c 3B        		.uleb128 0x3b
+ 645 004d 0B        		.uleb128 0xb
+ 646 004e 27        		.uleb128 0x27
+ 647 004f 0C        		.uleb128 0xc
+ 648 0050 11        		.uleb128 0x11
+ 649 0051 01        		.uleb128 0x1
+ 650 0052 12        		.uleb128 0x12
+ 651 0053 01        		.uleb128 0x1
+ 652 0054 40        		.uleb128 0x40
+ 653 0055 0A        		.uleb128 0xa
+ 654 0056 9742      		.uleb128 0x2117
+ 655 0058 0C        		.uleb128 0xc
+ 656 0059 01        		.uleb128 0x1
+ 657 005a 13        		.uleb128 0x13
+ 658 005b 00        		.byte	0
+ 659 005c 00        		.byte	0
+ 660 005d 07        		.uleb128 0x7
+ 661 005e 34        		.uleb128 0x34
+ 662 005f 00        		.byte	0
+ 663 0060 03        		.uleb128 0x3
+ 664 0061 08        		.uleb128 0x8
+ 665 0062 3A        		.uleb128 0x3a
+ 666 0063 0B        		.uleb128 0xb
+ 667 0064 3B        		.uleb128 0x3b
+ 668 0065 0B        		.uleb128 0xb
+ 669 0066 49        		.uleb128 0x49
+ 670 0067 13        		.uleb128 0x13
+ 671 0068 02        		.uleb128 0x2
+ 672 0069 06        		.uleb128 0x6
+ 673 006a 00        		.byte	0
+ 674 006b 00        		.byte	0
+ 675 006c 08        		.uleb128 0x8
+ 676 006d 2E        		.uleb128 0x2e
+ 677 006e 01        		.byte	0x1
+ 678 006f 3F        		.uleb128 0x3f
+ 679 0070 0C        		.uleb128 0xc
+ 680 0071 03        		.uleb128 0x3
+ 681 0072 0E        		.uleb128 0xe
+ 682 0073 3A        		.uleb128 0x3a
+ 683 0074 0B        		.uleb128 0xb
+ 684 0075 3B        		.uleb128 0x3b
+ 685 0076 0B        		.uleb128 0xb
+ 686 0077 27        		.uleb128 0x27
+ 687 0078 0C        		.uleb128 0xc
+ 688 0079 49        		.uleb128 0x49
+ 689 007a 13        		.uleb128 0x13
+ 690 007b 11        		.uleb128 0x11
+ 691 007c 01        		.uleb128 0x1
+ 692 007d 12        		.uleb128 0x12
+ 693 007e 01        		.uleb128 0x1
+ 694 007f 40        		.uleb128 0x40
+ 695 0080 06        		.uleb128 0x6
+ 696 0081 9742      		.uleb128 0x2117
+ 697 0083 0C        		.uleb128 0xc
+ 698 0084 01        		.uleb128 0x1
+ 699 0085 13        		.uleb128 0x13
+ 700 0086 00        		.byte	0
+ 701 0087 00        		.byte	0
+ 702 0088 09        		.uleb128 0x9
+ 703 0089 05        		.uleb128 0x5
+ 704 008a 00        		.byte	0
+ 705 008b 03        		.uleb128 0x3
+ 706 008c 0E        		.uleb128 0xe
+ 707 008d 3A        		.uleb128 0x3a
+ 708 008e 0B        		.uleb128 0xb
+ 709 008f 3B        		.uleb128 0x3b
+ 710 0090 0B        		.uleb128 0xb
+ 711 0091 49        		.uleb128 0x49
+ 712 0092 13        		.uleb128 0x13
+ 713 0093 02        		.uleb128 0x2
+ 714 0094 06        		.uleb128 0x6
+ 715 0095 00        		.byte	0
+ 716 0096 00        		.byte	0
+ 717 0097 0A        		.uleb128 0xa
+ 718 0098 34        		.uleb128 0x34
+ 719 0099 00        		.byte	0
+ 720 009a 03        		.uleb128 0x3
+ 721 009b 0E        		.uleb128 0xe
+ 722 009c 3A        		.uleb128 0x3a
+ 723 009d 0B        		.uleb128 0xb
+ 724 009e 3B        		.uleb128 0x3b
+ 725 009f 0B        		.uleb128 0xb
+ 726 00a0 49        		.uleb128 0x49
+ 727 00a1 13        		.uleb128 0x13
+ 728 00a2 02        		.uleb128 0x2
+ 729 00a3 0A        		.uleb128 0xa
+ 730 00a4 00        		.byte	0
+ 731 00a5 00        		.byte	0
+ 732 00a6 0B        		.uleb128 0xb
+ 733 00a7 34        		.uleb128 0x34
+ 734 00a8 00        		.byte	0
+ 735 00a9 03        		.uleb128 0x3
+ 736 00aa 0E        		.uleb128 0xe
+ 737 00ab 3A        		.uleb128 0x3a
+ 738 00ac 0B        		.uleb128 0xb
+ 739 00ad 3B        		.uleb128 0x3b
+ 740 00ae 0B        		.uleb128 0xb
+ 741 00af 49        		.uleb128 0x49
+ 742 00b0 13        		.uleb128 0x13
+ 743 00b1 02        		.uleb128 0x2
+ 744 00b2 06        		.uleb128 0x6
+ 745 00b3 00        		.byte	0
+ 746 00b4 00        		.byte	0
+ 747 00b5 0C        		.uleb128 0xc
+ 748 00b6 0B        		.uleb128 0xb
+ 749 00b7 01        		.byte	0x1
+ 750 00b8 11        		.uleb128 0x11
+ 751 00b9 01        		.uleb128 0x1
+ 752 00ba 12        		.uleb128 0x12
+ 753 00bb 01        		.uleb128 0x1
+ 754 00bc 00        		.byte	0
+ 755 00bd 00        		.byte	0
+ 756 00be 0D        		.uleb128 0xd
+ 757 00bf 2E        		.uleb128 0x2e
+ 758 00c0 01        		.byte	0x1
+ 759 00c1 3F        		.uleb128 0x3f
+ 760 00c2 0C        		.uleb128 0xc
+ 761 00c3 03        		.uleb128 0x3
+ 762 00c4 0E        		.uleb128 0xe
+ 763 00c5 3A        		.uleb128 0x3a
+ 764 00c6 0B        		.uleb128 0xb
+ 765 00c7 3B        		.uleb128 0x3b
+ 766 00c8 0B        		.uleb128 0xb
+ 767 00c9 27        		.uleb128 0x27
+ 768 00ca 0C        		.uleb128 0xc
+ 769 00cb 49        		.uleb128 0x49
+ 770 00cc 13        		.uleb128 0x13
+ 771 00cd 11        		.uleb128 0x11
+ 772 00ce 01        		.uleb128 0x1
+ 773 00cf 12        		.uleb128 0x12
+ 774 00d0 01        		.uleb128 0x1
+ 775 00d1 40        		.uleb128 0x40
+ 776 00d2 0A        		.uleb128 0xa
+ 777 00d3 9742      		.uleb128 0x2117
+ 778 00d5 0C        		.uleb128 0xc
+ 779 00d6 01        		.uleb128 0x1
+ 780 00d7 13        		.uleb128 0x13
+ 781 00d8 00        		.byte	0
+ 782 00d9 00        		.byte	0
+ 783 00da 0E        		.uleb128 0xe
+ 784 00db 24        		.uleb128 0x24
+ 785 00dc 00        		.byte	0
+ 786 00dd 0B        		.uleb128 0xb
+ 787 00de 0B        		.uleb128 0xb
+ 788 00df 3E        		.uleb128 0x3e
+ 789 00e0 0B        		.uleb128 0xb
+ 790 00e1 03        		.uleb128 0x3
+ 791 00e2 08        		.uleb128 0x8
+ 792 00e3 00        		.byte	0
+ 793 00e4 00        		.byte	0
+ 794 00e5 0F        		.uleb128 0xf
+ 795 00e6 26        		.uleb128 0x26
+ 796 00e7 00        		.byte	0
+ 797 00e8 49        		.uleb128 0x49
+ 798 00e9 13        		.uleb128 0x13
+ 799 00ea 00        		.byte	0
+ 800 00eb 00        		.byte	0
+ 801 00ec 10        		.uleb128 0x10
+ 802 00ed 05        		.uleb128 0x5
+ 803 00ee 00        		.byte	0
+ 804 00ef 03        		.uleb128 0x3
+ 805 00f0 0E        		.uleb128 0xe
+ 806 00f1 3A        		.uleb128 0x3a
+ 807 00f2 0B        		.uleb128 0xb
+ 808 00f3 3B        		.uleb128 0x3b
+ 809 00f4 0B        		.uleb128 0xb
+ 810 00f5 49        		.uleb128 0x49
+ 811 00f6 13        		.uleb128 0x13
+ 812 00f7 02        		.uleb128 0x2
+ 813 00f8 0A        		.uleb128 0xa
+ 814 00f9 00        		.byte	0
+ 815 00fa 00        		.byte	0
+ 816 00fb 11        		.uleb128 0x11
+ 817 00fc 01        		.uleb128 0x1
+ 818 00fd 01        		.byte	0x1
+ 819 00fe 49        		.uleb128 0x49
+ 820 00ff 13        		.uleb128 0x13
+ 821 0100 01        		.uleb128 0x1
+ 822 0101 13        		.uleb128 0x13
+ 823 0102 00        		.byte	0
+ 824 0103 00        		.byte	0
+ 825 0104 12        		.uleb128 0x12
+ 826 0105 21        		.uleb128 0x21
+ 827 0106 00        		.byte	0
+ 828 0107 49        		.uleb128 0x49
+ 829 0108 13        		.uleb128 0x13
+ 830 0109 2F        		.uleb128 0x2f
+ 831 010a 0B        		.uleb128 0xb
+ 832 010b 00        		.byte	0
+ 833 010c 00        		.byte	0
+ 834 010d 13        		.uleb128 0x13
+ 835 010e 35        		.uleb128 0x35
+ 836 010f 00        		.byte	0
+ 837 0110 49        		.uleb128 0x49
+ 838 0111 13        		.uleb128 0x13
+ 839 0112 00        		.byte	0
+ 840 0113 00        		.byte	0
+ 841 0114 00        		.byte	0
+ 842               		.section	.debug_loc,"",@progbits
+ 843               	.Ldebug_loc0:
+ 844               	.LLST0:
+ 845 0000 0000 0000 		.long	.LVL0-.Ltext0
+ 846 0004 0800 0000 		.long	.LVL1-.Ltext0
+ 847 0008 0200      		.word	0x2
+ 848 000a 30        		.byte	0x30
+ 849 000b 9F        		.byte	0x9f
+ 850 000c 0800 0000 		.long	.LVL1-.Ltext0
+ 851 0010 1600 0000 		.long	.LVL2-.Ltext0
+ 852 0014 0100      		.word	0x1
+ 853 0016 68        		.byte	0x68
+ 854 0017 1600 0000 		.long	.LVL2-.Ltext0
+ 855 001b 1800 0000 		.long	.LVL3-.Ltext0
+ 856 001f 0300      		.word	0x3
+ 857 0021 88        		.byte	0x88
+ 858 0022 01        		.sleb128 1
+ 859 0023 9F        		.byte	0x9f
+ 860 0024 1800 0000 		.long	.LVL3-.Ltext0
+ 861 0028 2000 0000 		.long	.LFE0-.Ltext0
+ 862 002c 0100      		.word	0x1
+ 863 002e 68        		.byte	0x68
+ 864 002f 0000 0000 		.long	0
+ 865 0033 0000 0000 		.long	0
+ 866               	.LLST1:
+ 867 0037 2000 0000 		.long	.LFB1-.Ltext0
+ 868 003b 2200 0000 		.long	.LCFI0-.Ltext0
+ 869 003f 0300      		.word	0x3
+ 870 0041 92        		.byte	0x92
+ 871 0042 20        		.uleb128 0x20
+ 872 0043 02        		.sleb128 2
+ 873 0044 2200 0000 		.long	.LCFI0-.Ltext0
+ 874 0048 8400 0000 		.long	.LFE1-.Ltext0
+ 875 004c 0300      		.word	0x3
+ 876 004e 92        		.byte	0x92
+ 877 004f 20        		.uleb128 0x20
+ 878 0050 03        		.sleb128 3
+ 879 0051 0000 0000 		.long	0
+ 880 0055 0000 0000 		.long	0
+ 881               	.LLST2:
+ 882 0059 2000 0000 		.long	.LVL4-.Ltext0
+ 883 005d 2A00 0000 		.long	.LVL6-.Ltext0
+ 884 0061 0600      		.word	0x6
+ 885 0063 68        		.byte	0x68
+ 886 0064 93        		.byte	0x93
+ 887 0065 01        		.uleb128 0x1
+ 888 0066 69        		.byte	0x69
+ 889 0067 93        		.byte	0x93
+ 890 0068 01        		.uleb128 0x1
+ 891 0069 2A00 0000 		.long	.LVL6-.Ltext0
+ 892 006d 3A00 0000 		.long	.LVL8-.Ltext0
+ 893 0071 0600      		.word	0x6
+ 894 0073 68        		.byte	0x68
+ 895 0074 93        		.byte	0x93
+ 896 0075 01        		.uleb128 0x1
+ 897 0076 69        		.byte	0x69
+ 898 0077 93        		.byte	0x93
+ 899 0078 01        		.uleb128 0x1
+ 900 0079 0000 0000 		.long	0
+ 901 007d 0000 0000 		.long	0
+ 902               	.LLST3:
+ 903 0081 3200 0000 		.long	.LVL7-.Ltext0
+ 904 0085 3A00 0000 		.long	.LVL8-.Ltext0
+ 905 0089 0200      		.word	0x2
+ 906 008b 30        		.byte	0x30
+ 907 008c 9F        		.byte	0x9f
+ 908 008d 3A00 0000 		.long	.LVL8-.Ltext0
+ 909 0091 7600 0000 		.long	.LVL12-.Ltext0
+ 910 0095 0100      		.word	0x1
+ 911 0097 66        		.byte	0x66
+ 912 0098 7600 0000 		.long	.LVL12-.Ltext0
+ 913 009c 7A00 0000 		.long	.LVL13-.Ltext0
+ 914 00a0 0300      		.word	0x3
+ 915 00a2 86        		.byte	0x86
+ 916 00a3 01        		.sleb128 1
+ 917 00a4 9F        		.byte	0x9f
+ 918 00a5 7A00 0000 		.long	.LVL13-.Ltext0
+ 919 00a9 8400 0000 		.long	.LFE1-.Ltext0
+ 920 00ad 0100      		.word	0x1
+ 921 00af 66        		.byte	0x66
+ 922 00b0 0000 0000 		.long	0
+ 923 00b4 0000 0000 		.long	0
+ 924               	.LLST4:
+ 925 00b8 2200 0000 		.long	.LVL5-.Ltext0
+ 926 00bc 3A00 0000 		.long	.LVL8-.Ltext0
+ 927 00c0 0300      		.word	0x3
+ 928 00c2 09        		.byte	0x9
+ 929 00c3 FF        		.byte	0xff
+ 930 00c4 9F        		.byte	0x9f
+ 931 00c5 3A00 0000 		.long	.LVL8-.Ltext0
+ 932 00c9 8400 0000 		.long	.LFE1-.Ltext0
+ 933 00cd 0600      		.word	0x6
+ 934 00cf 68        		.byte	0x68
+ 935 00d0 93        		.byte	0x93
+ 936 00d1 01        		.uleb128 0x1
+ 937 00d2 69        		.byte	0x69
+ 938 00d3 93        		.byte	0x93
+ 939 00d4 01        		.uleb128 0x1
+ 940 00d5 0000 0000 		.long	0
+ 941 00d9 0000 0000 		.long	0
+ 942               	.LLST5:
+ 943 00dd 8400 0000 		.long	.LVL14-.Ltext0
+ 944 00e1 8C00 0000 		.long	.LVL15-.Ltext0
+ 945 00e5 0100      		.word	0x1
+ 946 00e7 68        		.byte	0x68
+ 947 00e8 8C00 0000 		.long	.LVL15-.Ltext0
+ 948 00ec AC00 0000 		.long	.LFE2-.Ltext0
+ 949 00f0 0400      		.word	0x4
+ 950 00f2 F3        		.byte	0xf3
+ 951 00f3 01        		.uleb128 0x1
+ 952 00f4 68        		.byte	0x68
+ 953 00f5 9F        		.byte	0x9f
+ 954 00f6 0000 0000 		.long	0
+ 955 00fa 0000 0000 		.long	0
+ 956               	.LLST6:
+ 957 00fe A000 0000 		.long	.LVL16-.Ltext0
+ 958 0102 A600 0000 		.long	.LVL17-.Ltext0
+ 959 0106 0200      		.word	0x2
+ 960 0108 31        		.byte	0x31
+ 961 0109 9F        		.byte	0x9f
+ 962 010a AA00 0000 		.long	.LVL18-.Ltext0
+ 963 010e AC00 0000 		.long	.LFE2-.Ltext0
+ 964 0112 0600      		.word	0x6
+ 965 0114 68        		.byte	0x68
+ 966 0115 93        		.byte	0x93
+ 967 0116 01        		.uleb128 0x1
+ 968 0117 69        		.byte	0x69
+ 969 0118 93        		.byte	0x93
+ 970 0119 01        		.uleb128 0x1
+ 971 011a 0000 0000 		.long	0
+ 972 011e 0000 0000 		.long	0
+ 973               	.LLST7:
+ 974 0122 AC00 0000 		.long	.LVL19-.Ltext0
+ 975 0126 B400 0000 		.long	.LVL20-.Ltext0
+ 976 012a 0100      		.word	0x1
+ 977 012c 68        		.byte	0x68
+ 978 012d B400 0000 		.long	.LVL20-.Ltext0
+ 979 0131 C200 0000 		.long	.LFE3-.Ltext0
+ 980 0135 0400      		.word	0x4
+ 981 0137 F3        		.byte	0xf3
+ 982 0138 01        		.uleb128 0x1
+ 983 0139 68        		.byte	0x68
+ 984 013a 9F        		.byte	0x9f
+ 985 013b 0000 0000 		.long	0
+ 986 013f 0000 0000 		.long	0
+ 987               	.LLST8:
+ 988 0143 C200 0000 		.long	.LVL21-.Ltext0
+ 989 0147 CA00 0000 		.long	.LVL22-.Ltext0
+ 990 014b 0100      		.word	0x1
+ 991 014d 68        		.byte	0x68
+ 992 014e CA00 0000 		.long	.LVL22-.Ltext0
+ 993 0152 D400 0000 		.long	.LFE4-.Ltext0
+ 994 0156 0400      		.word	0x4
+ 995 0158 F3        		.byte	0xf3
+ 996 0159 01        		.uleb128 0x1
+ 997 015a 68        		.byte	0x68
+ 998 015b 9F        		.byte	0x9f
+ 999 015c 0000 0000 		.long	0
+ 1000 0160 0000 0000 		.long	0
+ 1001               	.LLST9:
+ 1002 0164 D400 0000 		.long	.LVL23-.Ltext0
+ 1003 0168 DC00 0000 		.long	.LVL24-.Ltext0
+ 1004 016c 0100      		.word	0x1
+ 1005 016e 68        		.byte	0x68
+ 1006 016f DC00 0000 		.long	.LVL24-.Ltext0
+ 1007 0173 E600 0000 		.long	.LFE5-.Ltext0
+ 1008 0177 0400      		.word	0x4
+ 1009 0179 F3        		.byte	0xf3
+ 1010 017a 01        		.uleb128 0x1
+ 1011 017b 68        		.byte	0x68
+ 1012 017c 9F        		.byte	0x9f
+ 1013 017d 0000 0000 		.long	0
+ 1014 0181 0000 0000 		.long	0
+ 1015               		.section	.debug_aranges,"",@progbits
+ 1016 0000 1C00 0000 		.long	0x1c
+ 1017 0004 0200      		.word	0x2
+ 1018 0006 0000 0000 		.long	.Ldebug_info0
+ 1019 000a 04        		.byte	0x4
+ 1020 000b 00        		.byte	0
+ 1021 000c 0000      		.word	0
+ 1022 000e 0000      		.word	0
+ 1023 0010 0000 0000 		.long	.Ltext0
+ 1024 0014 E600 0000 		.long	.Letext0-.Ltext0
+ 1025 0018 0000 0000 		.long	0
+ 1026 001c 0000 0000 		.long	0
+ 1027               		.section	.debug_line,"",@progbits
+ 1028               	.Ldebug_line0:
+ 1029 0000 1901 0000 		.section	.debug_str,"MS",@progbits,1
+ 1029      0200 4100 
+ 1029      0000 0201 
+ 1029      FB0E 0A00 
+ 1029      0101 0101 
+ 1030               	.LASF18:
+ 1031 0000 5469 6D65 		.string	"Timers_DecreaseAll"
+ 1031      7273 5F44 
+ 1031      6563 7265 
+ 1031      6173 6541 
+ 1031      6C6C 00
+ 1032               	.LASF12:
+ 1033 0013 6D69 6C6C 		.string	"milliseconds_x256_t"
+ 1033      6973 6563 
+ 1033      6F6E 6473 
+ 1033      5F78 3235 
+ 1033      365F 7400 
+ 1034               	.LASF10:
+ 1035 0027 756E 7369 		.string	"unsigned int"
+ 1035      676E 6564 
+ 1035      2069 6E74 
+ 1035      00
+ 1036               	.LASF30:
+ 1037 0034 474E 5520 		.string	"GNU C99 5.4.0 -mn-flash=1 -mno-skip-bug -mcall-prologues -mmcu=avr25 -gdwarf-2 -Os -std=c
+ 1037      4339 3920 
+ 1037      352E 342E 
+ 1037      3020 2D6D 
+ 1037      6E2D 666C 
+ 1038               	.LASF9:
+ 1039 00d1 756E 7369 		.string	"unsigned char"
+ 1039      676E 6564 
+ 1039      2063 6861 
+ 1039      7200 
+ 1040               	.LASF25:
+ 1041 00df 5469 6D65 		.string	"Timer_SetExpired"
+ 1041      725F 5365 
+ 1041      7445 7870 
+ 1041      6972 6564 
+ 1041      00
+ 1042               	.LASF26:
+ 1043 00f0 5469 6D65 		.string	"Timer_Set"
+ 1043      725F 5365 
+ 1043      7400 
+ 1044               	.LASF20:
+ 1045 00fa 6465 6C74 		.string	"delta_x256"
+ 1045      615F 7832 
+ 1045      3536 00
+ 1046               	.LASF31:
+ 1047 0105 2E2E 2F75 		.string	"../util/timers.c"
+ 1047      7469 6C2F 
+ 1047      7469 6D65 
+ 1047      7273 2E63 
+ 1047      00
+ 1048               	.LASF11:
+ 1049 0116 6D69 6C6C 		.string	"milliseconds_t"
+ 1049      6973 6563 
+ 1049      6F6E 6473 
+ 1049      5F74 00
+ 1050               	.LASF16:
+ 1051 0125 6465 6C74 		.string	"delta"
+ 1051      6100 
+ 1052               	.LASF19:
+ 1053 012b 5469 6D65 		.string	"Timer_HasExpired"
+ 1053      725F 4861 
+ 1053      7345 7870 
+ 1053      6972 6564 
+ 1053      00
+ 1054               	.LASF2:
+ 1055 013c 5449 4D45 		.string	"TIMER_LED_BUTTON_BLINK"
+ 1055      525F 4C45 
+ 1055      445F 4255 
+ 1055      5454 4F4E 
+ 1055      5F42 4C49 
+ 1056               	.LASF7:
+ 1057 0153 5449 4D45 		.string	"TIMER_SELF_TEST"
+ 1057      525F 5345 
+ 1057      4C46 5F54 
+ 1057      4553 5400 
+ 1058               	.LASF5:
+ 1059 0163 5449 4D45 		.string	"TIMER_MEASURE_POT"
+ 1059      525F 4D45 
+ 1059      4153 5552 
+ 1059      455F 504F 
+ 1059      5400 
+ 1060               	.LASF23:
+ 1061 0175 5469 6D65 		.string	"Timers_Init"
+ 1061      7273 5F49 
+ 1061      6E69 7400 
+ 1062               	.LASF3:
+ 1063 0181 5449 4D45 		.string	"TIMER_SEND_KEY_UP"
+ 1063      525F 5345 
+ 1063      4E44 5F4B 
+ 1063      4559 5F55 
+ 1063      5000 
+ 1064               	.LASF29:
+ 1065 0193 5469 6D65 		.string	"Timers"
+ 1065      7273 00
+ 1066               	.LASF4:
+ 1067 019a 5449 4D45 		.string	"TIMER_SEND_KEY_DOWN"
+ 1067      525F 5345 
+ 1067      4E44 5F4B 
+ 1067      4559 5F44 
+ 1067      4F57 4E00 
+ 1068               	.LASF22:
+ 1069 01ae 7265 7375 		.string	"result"
+ 1069      6C74 00
+ 1070               	.LASF1:
+ 1071 01b5 5449 4D45 		.string	"TIMER_LED_SENSOR_BLINK"
+ 1071      525F 4C45 
+ 1071      445F 5345 
+ 1071      4E53 4F52 
+ 1071      5F42 4C49 
+ 1072               	.LASF0:
+ 1073 01cc 5449 4D45 		.string	"TIMER_LED_BLINK"
+ 1073      525F 4C45 
+ 1073      445F 424C 
+ 1073      494E 4B00 
+ 1074               	.LASF13:
+ 1075 01dc 5469 6D65 		.string	"TimerId_t"
+ 1075      7249 645F 
+ 1075      7400 
+ 1076               	.LASF6:
+ 1077 01e6 5449 4D45 		.string	"TIMER_DATA_CHANGE"
+ 1077      525F 4441 
+ 1077      5441 5F43 
+ 1077      4841 4E47 
+ 1077      4500 
+ 1078               	.LASF15:
+ 1079 01f8 6E65 7874 		.string	"nextTime"
+ 1079      5469 6D65 
+ 1079      00
+ 1080               	.LASF8:
+ 1081 0201 5449 4D45 		.string	"TIMER_LAST"
+ 1081      525F 4C41 
+ 1081      5354 00
+ 1082               	.LASF14:
+ 1083 020c 6672 6167 		.string	"frag"
+ 1083      00
+ 1084               	.LASF17:
+ 1085 0211 7465 6D70 		.string	"tempTime"
+ 1085      5469 6D65 
+ 1085      00
+ 1086               	.LASF24:
+ 1087 021a 5469 6D65 		.string	"Timer_Reset"
+ 1087      725F 5265 
+ 1087      7365 7400 
+ 1088               	.LASF27:
+ 1089 0226 7365 7454 		.string	"setTimeout"
+ 1089      696D 656F 
+ 1089      7574 00
+ 1090               	.LASF28:
+ 1091 0231 7369 7A65 		.string	"sizetype"
+ 1091      7479 7065 
+ 1091      00
+ 1092               	.LASF21:
+ 1093 023a 5469 6D65 		.string	"TimerId"
+ 1093      7249 6400 
+ 1094               	.LASF32:
+ 1095 0242 2F68 6F6D 		.string	"/home/birkler/src/birkler/avrtinybootloader/app_hid"
+ 1095      652F 6269 
+ 1095      726B 6C65 
+ 1095      722F 7372 
+ 1095      632F 6269 
+ 1096               		.ident	"GCC: (GNU) 5.4.0"
+ 1097               	.global __do_clear_bss
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 timers.c
+     /tmp/cc7PGSaP.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc7PGSaP.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc7PGSaP.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc7PGSaP.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc7PGSaP.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc7PGSaP.s:12     .text:0000000000000000 Timers_Init
+     /tmp/cc7PGSaP.s:266    .bss:0000000000000001 Timers
+     /tmp/cc7PGSaP.s:53     .text:0000000000000020 Timers_DecreaseAll
+                             .bss:0000000000000000 frag.1471
+     /tmp/cc7PGSaP.s:146    .text:0000000000000084 Timer_HasExpired
+     /tmp/cc7PGSaP.s:190    .text:00000000000000ac Timer_Reset
+     /tmp/cc7PGSaP.s:217    .text:00000000000000c2 Timer_SetExpired
+     /tmp/cc7PGSaP.s:242    .text:00000000000000d4 Timer_Set
+
+UNDEFINED SYMBOLS
+__do_clear_bss

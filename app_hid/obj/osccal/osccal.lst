@@ -1,0 +1,697 @@
+   1               		.file	"osccal.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	calibrateOscillator
+  11               		.type	calibrateOscillator, @function
+  12               	calibrateOscillator:
+  13               	.LFB2:
+  14               		.file 1 "../osccal/osccal.c"
+   1:../osccal/osccal.c **** /* Name: osccal.c
+   2:../osccal/osccal.c ****  * Author: Christian Starkjohann
+   3:../osccal/osccal.c ****  * Creation Date: 2008-04-10
+   4:../osccal/osccal.c ****  * Tabsize: 4
+   5:../osccal/osccal.c ****  * Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
+   6:../osccal/osccal.c ****  * License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
+   7:../osccal/osccal.c ****  * This Revision: $Id: osccal.c 762 2009-08-12 17:10:30Z cs $
+   8:../osccal/osccal.c ****  */
+   9:../osccal/osccal.c **** 
+  10:../osccal/osccal.c **** #include <avr/io.h>
+  11:../osccal/osccal.c **** 
+  12:../osccal/osccal.c **** #ifndef uchar
+  13:../osccal/osccal.c **** #define uchar   unsigned char
+  14:../osccal/osccal.c **** #endif
+  15:../osccal/osccal.c **** 
+  16:../osccal/osccal.c **** #include "usbdrv.h"
+  17:../osccal/osccal.c **** 
+  18:../osccal/osccal.c **** /* ------------------------------------------------------------------------- */
+  19:../osccal/osccal.c **** /* ------------------------ Oscillator Calibration ------------------------- */
+  20:../osccal/osccal.c **** /* ------------------------------------------------------------------------- */
+  21:../osccal/osccal.c **** 
+  22:../osccal/osccal.c **** /* Calibrate the RC oscillator. Our timing reference is the Start Of Frame
+  23:../osccal/osccal.c ****  * signal (a single SE0 bit) repeating every millisecond immediately after
+  24:../osccal/osccal.c ****  * a USB RESET. We first do a binary search for the OSCCAL value and then
+  25:../osccal/osccal.c ****  * optimize this value with a neighboorhod search.
+  26:../osccal/osccal.c ****  */
+  27:../osccal/osccal.c **** void    calibrateOscillator(void)
+  28:../osccal/osccal.c **** {
+  15               		.loc 1 28 0
+  16               		.cfi_startproc
+  17 0000 A0E0      		ldi r26,0
+  18 0002 B0E0      		ldi r27,0
+  19 0004 E0E0      		ldi r30,lo8(gs(1f))
+  20 0006 F0E0      		ldi r31,hi8(gs(1f))
+  21 0008 00C0      		rjmp __prologue_saves__+((18 - 7) * 2)
+  22               	1:
+  23               	.LCFI0:
+  24               		.cfi_offset 13, -2
+  25               		.cfi_offset 14, -3
+  26               		.cfi_offset 15, -4
+  27               		.cfi_offset 16, -5
+  28               		.cfi_offset 17, -6
+  29               		.cfi_offset 28, -7
+  30               		.cfi_offset 29, -8
+  31               		.cfi_def_cfa_offset 9
+  32               	/* prologue: function */
+  33               	/* frame size = 0 */
+  34               	/* stack size = 7 */
+  35               	.L__stack_usage = 7
+  36               	.LVL0:
+  37               		.loc 1 28 0
+  38 000a 08E0      		ldi r16,lo8(8)
+  39 000c 10E0      		ldi r17,0
+  29:../osccal/osccal.c **** uchar       step = 128;
+  30:../osccal/osccal.c **** uchar       trialValue = 0, optimumValue;
+  40               		.loc 1 30 0
+  41 000e C0E0      		ldi r28,0
+  29:../osccal/osccal.c **** uchar       step = 128;
+  42               		.loc 1 29 0
+  43 0010 D0E8      		ldi r29,lo8(-128)
+  44               	.LVL1:
+  45               	.L3:
+  31:../osccal/osccal.c **** int         x, optimumDev, targetValue = (unsigned)(1499 * (double)F_CPU / 10.5e6 + 0.5);
+  32:../osccal/osccal.c **** 
+  33:../osccal/osccal.c ****     /* do a binary search: */
+  34:../osccal/osccal.c ****     do{
+  35:../osccal/osccal.c ****         OSCCAL = trialValue + step;
+  46               		.loc 1 35 0
+  47 0012 DD2E      		mov r13,r29
+  48 0014 DC0E      		add r13,r28
+  49 0016 D1BE      		out 0x31,r13
+  36:../osccal/osccal.c ****         x = usbMeasureFrameLength();    /* proportional to current real frequency */
+  50               		.loc 1 36 0
+  51 0018 00D0      		rcall usbMeasureFrameLength
+  52               	.LVL2:
+  53 001a 7C01      		movw r14,r24
+  54               	.LVL3:
+  37:../osccal/osccal.c ****         if(x < targetValue)             /* frequency still too low */
+  55               		.loc 1 37 0
+  56 001c 84E3      		ldi r24,52
+  57 001e E816      		cp r14,r24
+  58 0020 89E0      		ldi r24,9
+  59 0022 F806      		cpc r15,r24
+  60 0024 04F4      		brge .L2
+  38:../osccal/osccal.c ****             trialValue += step;
+  61               		.loc 1 38 0
+  62 0026 CD2D      		mov r28,r13
+  63               	.LVL4:
+  64               	.L2:
+  39:../osccal/osccal.c ****         step >>= 1;
+  65               		.loc 1 39 0
+  66 0028 D695      		lsr r29
+  67               	.LVL5:
+  68 002a 0150      		subi r16,1
+  69 002c 1109      		sbc r17,__zero_reg__
+  40:../osccal/osccal.c ****     }while(step > 0);
+  70               		.loc 1 40 0
+  71 002e 01F4      		brne .L3
+  72               	.LVL6:
+  41:../osccal/osccal.c ****     /* We have a precision of +/- 1 for optimum OSCCAL here */
+  42:../osccal/osccal.c ****     /* now do a neighborhood search for optimum value */
+  43:../osccal/osccal.c ****     optimumValue = trialValue;
+  44:../osccal/osccal.c ****     optimumDev = x; /* this is certainly far away from optimum */
+  45:../osccal/osccal.c ****     for(OSCCAL = trialValue - 1; OSCCAL <= trialValue + 1; OSCCAL++){
+  73               		.loc 1 45 0
+  74 0030 8FEF      		ldi r24,lo8(-1)
+  75 0032 8C0F      		add r24,r28
+  76 0034 81BF      		out 0x31,r24
+  77 0036 0C2F      		mov r16,r28
+  78 0038 10E0      		ldi r17,0
+  79 003a 0F5F      		subi r16,-1
+  80 003c 1F4F      		sbci r17,-1
+  81               	.LVL7:
+  82               	.L4:
+  83               		.loc 1 45 0 is_stmt 0 discriminator 1
+  84 003e 81B7      		in r24,0x31
+  85 0040 90E0      		ldi r25,0
+  86 0042 0817      		cp r16,r24
+  87 0044 1907      		cpc r17,r25
+  88 0046 04F0      		brlt .L10
+  46:../osccal/osccal.c ****         x = usbMeasureFrameLength() - targetValue;
+  89               		.loc 1 46 0 is_stmt 1
+  90 0048 00D0      		rcall usbMeasureFrameLength
+  91               	.LVL8:
+  92 004a 8453      		subi r24,52
+  93 004c 9940      		sbci r25,9
+  94               	.LVL9:
+  95 004e 97FF      		sbrs r25,7
+  96 0050 00C0      		rjmp .L5
+  97 0052 9195      		neg r25
+  98 0054 8195      		neg r24
+  99 0056 9109      		sbc r25,__zero_reg__
+ 100               	.LVL10:
+ 101               	.L5:
+  47:../osccal/osccal.c ****         if(x < 0)
+  48:../osccal/osccal.c ****             x = -x;
+  49:../osccal/osccal.c ****         if(x < optimumDev){
+ 102               		.loc 1 49 0
+ 103 0058 8E15      		cp r24,r14
+ 104 005a 9F05      		cpc r25,r15
+ 105 005c 04F4      		brge .L6
+ 106               	.LVL11:
+  50:../osccal/osccal.c ****             optimumDev = x;
+  51:../osccal/osccal.c ****             optimumValue = OSCCAL;
+ 107               		.loc 1 51 0
+ 108 005e C1B7      		in r28,0x31
+ 109               	.LVL12:
+ 110 0060 7C01      		movw r14,r24
+ 111               	.LVL13:
+ 112               	.L6:
+  45:../osccal/osccal.c ****         x = usbMeasureFrameLength() - targetValue;
+ 113               		.loc 1 45 0 discriminator 2
+ 114 0062 81B7      		in r24,0x31
+ 115               	.LVL14:
+ 116 0064 8F5F      		subi r24,lo8(-(1))
+ 117 0066 81BF      		out 0x31,r24
+ 118 0068 00C0      		rjmp .L4
+ 119               	.L10:
+  52:../osccal/osccal.c ****         }
+  53:../osccal/osccal.c ****     }
+  54:../osccal/osccal.c ****     OSCCAL = optimumValue;
+ 120               		.loc 1 54 0
+ 121 006a C1BF      		out 0x31,r28
+ 122               	/* epilogue start */
+  55:../osccal/osccal.c **** }
+ 123               		.loc 1 55 0
+ 124 006c CDB7      		in r28,__SP_L__
+ 125 006e DEB7      		in r29,__SP_H__
+ 126               	.LVL15:
+ 127 0070 E7E0      		ldi r30, lo8(7)
+ 128 0072 00C0      		rjmp __epilogue_restores__ + ((18 - 7) * 2)
+ 129               		.cfi_endproc
+ 130               	.LFE2:
+ 131               		.size	calibrateOscillator, .-calibrateOscillator
+ 132               	.Letext0:
+ 133               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 134               		.file 3 "../usbdrv/usbdrv.h"
+ 135               		.section	.debug_info,"",@progbits
+ 136               	.Ldebug_info0:
+ 137 0000 FD00 0000 		.long	0xfd
+ 138 0004 0200      		.word	0x2
+ 139 0006 0000 0000 		.long	.Ldebug_abbrev0
+ 140 000a 04        		.byte	0x4
+ 141 000b 01        		.uleb128 0x1
+ 142 000c 0000 0000 		.long	.LASF13
+ 143 0010 0C        		.byte	0xc
+ 144 0011 0000 0000 		.long	.LASF14
+ 145 0015 0000 0000 		.long	.LASF15
+ 146 0019 0000 0000 		.long	.Ltext0
+ 147 001d 0000 0000 		.long	.Letext0
+ 148 0021 0000 0000 		.long	.Ldebug_line0
+ 149 0025 02        		.uleb128 0x2
+ 150 0026 01        		.byte	0x1
+ 151 0027 06        		.byte	0x6
+ 152 0028 0000 0000 		.long	.LASF0
+ 153 002c 03        		.uleb128 0x3
+ 154 002d 0000 0000 		.long	.LASF16
+ 155 0031 02        		.byte	0x2
+ 156 0032 7E        		.byte	0x7e
+ 157 0033 3700 0000 		.long	0x37
+ 158 0037 02        		.uleb128 0x2
+ 159 0038 01        		.byte	0x1
+ 160 0039 08        		.byte	0x8
+ 161 003a 0000 0000 		.long	.LASF1
+ 162 003e 04        		.uleb128 0x4
+ 163 003f 02        		.byte	0x2
+ 164 0040 05        		.byte	0x5
+ 165 0041 696E 7400 		.string	"int"
+ 166 0045 02        		.uleb128 0x2
+ 167 0046 02        		.byte	0x2
+ 168 0047 07        		.byte	0x7
+ 169 0048 0000 0000 		.long	.LASF2
+ 170 004c 02        		.uleb128 0x2
+ 171 004d 04        		.byte	0x4
+ 172 004e 05        		.byte	0x5
+ 173 004f 0000 0000 		.long	.LASF3
+ 174 0053 02        		.uleb128 0x2
+ 175 0054 04        		.byte	0x4
+ 176 0055 07        		.byte	0x7
+ 177 0056 0000 0000 		.long	.LASF4
+ 178 005a 02        		.uleb128 0x2
+ 179 005b 08        		.byte	0x8
+ 180 005c 05        		.byte	0x5
+ 181 005d 0000 0000 		.long	.LASF5
+ 182 0061 02        		.uleb128 0x2
+ 183 0062 08        		.byte	0x8
+ 184 0063 07        		.byte	0x7
+ 185 0064 0000 0000 		.long	.LASF6
+ 186 0068 02        		.uleb128 0x2
+ 187 0069 02        		.byte	0x2
+ 188 006a 07        		.byte	0x7
+ 189 006b 0000 0000 		.long	.LASF7
+ 190 006f 05        		.uleb128 0x5
+ 191 0070 01        		.byte	0x1
+ 192 0071 0000 0000 		.long	.LASF17
+ 193 0075 01        		.byte	0x1
+ 194 0076 1B        		.byte	0x1b
+ 195 0077 01        		.byte	0x1
+ 196 0078 0000 0000 		.long	.LFB2
+ 197 007c 0000 0000 		.long	.LFE2
+ 198 0080 0000 0000 		.long	.LLST0
+ 199 0084 01        		.byte	0x1
+ 200 0085 F200 0000 		.long	0xf2
+ 201 0089 06        		.uleb128 0x6
+ 202 008a 0000 0000 		.long	.LASF8
+ 203 008e 01        		.byte	0x1
+ 204 008f 1D        		.byte	0x1d
+ 205 0090 3700 0000 		.long	0x37
+ 206 0094 0000 0000 		.long	.LLST1
+ 207 0098 06        		.uleb128 0x6
+ 208 0099 0000 0000 		.long	.LASF9
+ 209 009d 01        		.byte	0x1
+ 210 009e 1E        		.byte	0x1e
+ 211 009f 3700 0000 		.long	0x37
+ 212 00a3 0000 0000 		.long	.LLST2
+ 213 00a7 06        		.uleb128 0x6
+ 214 00a8 0000 0000 		.long	.LASF10
+ 215 00ac 01        		.byte	0x1
+ 216 00ad 1E        		.byte	0x1e
+ 217 00ae 3700 0000 		.long	0x37
+ 218 00b2 0000 0000 		.long	.LLST3
+ 219 00b6 07        		.uleb128 0x7
+ 220 00b7 7800      		.string	"x"
+ 221 00b9 01        		.byte	0x1
+ 222 00ba 1F        		.byte	0x1f
+ 223 00bb 3E00 0000 		.long	0x3e
+ 224 00bf 0000 0000 		.long	.LLST4
+ 225 00c3 06        		.uleb128 0x6
+ 226 00c4 0000 0000 		.long	.LASF11
+ 227 00c8 01        		.byte	0x1
+ 228 00c9 1F        		.byte	0x1f
+ 229 00ca 3E00 0000 		.long	0x3e
+ 230 00ce 0000 0000 		.long	.LLST5
+ 231 00d2 08        		.uleb128 0x8
+ 232 00d3 0000 0000 		.long	.LASF12
+ 233 00d7 01        		.byte	0x1
+ 234 00d8 1F        		.byte	0x1f
+ 235 00d9 3E00 0000 		.long	0x3e
+ 236 00dd 3409      		.word	0x934
+ 237 00df 09        		.uleb128 0x9
+ 238 00e0 0000 0000 		.long	.LVL2
+ 239 00e4 F200 0000 		.long	0xf2
+ 240 00e8 09        		.uleb128 0x9
+ 241 00e9 0000 0000 		.long	.LVL8
+ 242 00ed F200 0000 		.long	0xf2
+ 243 00f1 00        		.byte	0
+ 244 00f2 0A        		.uleb128 0xa
+ 245 00f3 01        		.byte	0x1
+ 246 00f4 01        		.byte	0x1
+ 247 00f5 0000 0000 		.long	.LASF18
+ 248 00f9 0000 0000 		.long	.LASF18
+ 249 00fd 03        		.byte	0x3
+ 250 00fe 4401      		.word	0x144
+ 251 0100 00        		.byte	0
+ 252               		.section	.debug_abbrev,"",@progbits
+ 253               	.Ldebug_abbrev0:
+ 254 0000 01        		.uleb128 0x1
+ 255 0001 11        		.uleb128 0x11
+ 256 0002 01        		.byte	0x1
+ 257 0003 25        		.uleb128 0x25
+ 258 0004 0E        		.uleb128 0xe
+ 259 0005 13        		.uleb128 0x13
+ 260 0006 0B        		.uleb128 0xb
+ 261 0007 03        		.uleb128 0x3
+ 262 0008 0E        		.uleb128 0xe
+ 263 0009 1B        		.uleb128 0x1b
+ 264 000a 0E        		.uleb128 0xe
+ 265 000b 11        		.uleb128 0x11
+ 266 000c 01        		.uleb128 0x1
+ 267 000d 12        		.uleb128 0x12
+ 268 000e 01        		.uleb128 0x1
+ 269 000f 10        		.uleb128 0x10
+ 270 0010 06        		.uleb128 0x6
+ 271 0011 00        		.byte	0
+ 272 0012 00        		.byte	0
+ 273 0013 02        		.uleb128 0x2
+ 274 0014 24        		.uleb128 0x24
+ 275 0015 00        		.byte	0
+ 276 0016 0B        		.uleb128 0xb
+ 277 0017 0B        		.uleb128 0xb
+ 278 0018 3E        		.uleb128 0x3e
+ 279 0019 0B        		.uleb128 0xb
+ 280 001a 03        		.uleb128 0x3
+ 281 001b 0E        		.uleb128 0xe
+ 282 001c 00        		.byte	0
+ 283 001d 00        		.byte	0
+ 284 001e 03        		.uleb128 0x3
+ 285 001f 16        		.uleb128 0x16
+ 286 0020 00        		.byte	0
+ 287 0021 03        		.uleb128 0x3
+ 288 0022 0E        		.uleb128 0xe
+ 289 0023 3A        		.uleb128 0x3a
+ 290 0024 0B        		.uleb128 0xb
+ 291 0025 3B        		.uleb128 0x3b
+ 292 0026 0B        		.uleb128 0xb
+ 293 0027 49        		.uleb128 0x49
+ 294 0028 13        		.uleb128 0x13
+ 295 0029 00        		.byte	0
+ 296 002a 00        		.byte	0
+ 297 002b 04        		.uleb128 0x4
+ 298 002c 24        		.uleb128 0x24
+ 299 002d 00        		.byte	0
+ 300 002e 0B        		.uleb128 0xb
+ 301 002f 0B        		.uleb128 0xb
+ 302 0030 3E        		.uleb128 0x3e
+ 303 0031 0B        		.uleb128 0xb
+ 304 0032 03        		.uleb128 0x3
+ 305 0033 08        		.uleb128 0x8
+ 306 0034 00        		.byte	0
+ 307 0035 00        		.byte	0
+ 308 0036 05        		.uleb128 0x5
+ 309 0037 2E        		.uleb128 0x2e
+ 310 0038 01        		.byte	0x1
+ 311 0039 3F        		.uleb128 0x3f
+ 312 003a 0C        		.uleb128 0xc
+ 313 003b 03        		.uleb128 0x3
+ 314 003c 0E        		.uleb128 0xe
+ 315 003d 3A        		.uleb128 0x3a
+ 316 003e 0B        		.uleb128 0xb
+ 317 003f 3B        		.uleb128 0x3b
+ 318 0040 0B        		.uleb128 0xb
+ 319 0041 27        		.uleb128 0x27
+ 320 0042 0C        		.uleb128 0xc
+ 321 0043 11        		.uleb128 0x11
+ 322 0044 01        		.uleb128 0x1
+ 323 0045 12        		.uleb128 0x12
+ 324 0046 01        		.uleb128 0x1
+ 325 0047 40        		.uleb128 0x40
+ 326 0048 06        		.uleb128 0x6
+ 327 0049 9742      		.uleb128 0x2117
+ 328 004b 0C        		.uleb128 0xc
+ 329 004c 01        		.uleb128 0x1
+ 330 004d 13        		.uleb128 0x13
+ 331 004e 00        		.byte	0
+ 332 004f 00        		.byte	0
+ 333 0050 06        		.uleb128 0x6
+ 334 0051 34        		.uleb128 0x34
+ 335 0052 00        		.byte	0
+ 336 0053 03        		.uleb128 0x3
+ 337 0054 0E        		.uleb128 0xe
+ 338 0055 3A        		.uleb128 0x3a
+ 339 0056 0B        		.uleb128 0xb
+ 340 0057 3B        		.uleb128 0x3b
+ 341 0058 0B        		.uleb128 0xb
+ 342 0059 49        		.uleb128 0x49
+ 343 005a 13        		.uleb128 0x13
+ 344 005b 02        		.uleb128 0x2
+ 345 005c 06        		.uleb128 0x6
+ 346 005d 00        		.byte	0
+ 347 005e 00        		.byte	0
+ 348 005f 07        		.uleb128 0x7
+ 349 0060 34        		.uleb128 0x34
+ 350 0061 00        		.byte	0
+ 351 0062 03        		.uleb128 0x3
+ 352 0063 08        		.uleb128 0x8
+ 353 0064 3A        		.uleb128 0x3a
+ 354 0065 0B        		.uleb128 0xb
+ 355 0066 3B        		.uleb128 0x3b
+ 356 0067 0B        		.uleb128 0xb
+ 357 0068 49        		.uleb128 0x49
+ 358 0069 13        		.uleb128 0x13
+ 359 006a 02        		.uleb128 0x2
+ 360 006b 06        		.uleb128 0x6
+ 361 006c 00        		.byte	0
+ 362 006d 00        		.byte	0
+ 363 006e 08        		.uleb128 0x8
+ 364 006f 34        		.uleb128 0x34
+ 365 0070 00        		.byte	0
+ 366 0071 03        		.uleb128 0x3
+ 367 0072 0E        		.uleb128 0xe
+ 368 0073 3A        		.uleb128 0x3a
+ 369 0074 0B        		.uleb128 0xb
+ 370 0075 3B        		.uleb128 0x3b
+ 371 0076 0B        		.uleb128 0xb
+ 372 0077 49        		.uleb128 0x49
+ 373 0078 13        		.uleb128 0x13
+ 374 0079 1C        		.uleb128 0x1c
+ 375 007a 05        		.uleb128 0x5
+ 376 007b 00        		.byte	0
+ 377 007c 00        		.byte	0
+ 378 007d 09        		.uleb128 0x9
+ 379 007e 8982 01   		.uleb128 0x4109
+ 380 0081 00        		.byte	0
+ 381 0082 11        		.uleb128 0x11
+ 382 0083 01        		.uleb128 0x1
+ 383 0084 31        		.uleb128 0x31
+ 384 0085 13        		.uleb128 0x13
+ 385 0086 00        		.byte	0
+ 386 0087 00        		.byte	0
+ 387 0088 0A        		.uleb128 0xa
+ 388 0089 2E        		.uleb128 0x2e
+ 389 008a 00        		.byte	0
+ 390 008b 3F        		.uleb128 0x3f
+ 391 008c 0C        		.uleb128 0xc
+ 392 008d 3C        		.uleb128 0x3c
+ 393 008e 0C        		.uleb128 0xc
+ 394 008f 8740      		.uleb128 0x2007
+ 395 0091 0E        		.uleb128 0xe
+ 396 0092 03        		.uleb128 0x3
+ 397 0093 0E        		.uleb128 0xe
+ 398 0094 3A        		.uleb128 0x3a
+ 399 0095 0B        		.uleb128 0xb
+ 400 0096 3B        		.uleb128 0x3b
+ 401 0097 05        		.uleb128 0x5
+ 402 0098 00        		.byte	0
+ 403 0099 00        		.byte	0
+ 404 009a 00        		.byte	0
+ 405               		.section	.debug_loc,"",@progbits
+ 406               	.Ldebug_loc0:
+ 407               	.LLST0:
+ 408 0000 0000 0000 		.long	.LFB2-.Ltext0
+ 409 0004 0A00 0000 		.long	.LCFI0-.Ltext0
+ 410 0008 0300      		.word	0x3
+ 411 000a 92        		.byte	0x92
+ 412 000b 20        		.uleb128 0x20
+ 413 000c 02        		.sleb128 2
+ 414 000d 0A00 0000 		.long	.LCFI0-.Ltext0
+ 415 0011 7400 0000 		.long	.LFE2-.Ltext0
+ 416 0015 0300      		.word	0x3
+ 417 0017 92        		.byte	0x92
+ 418 0018 20        		.uleb128 0x20
+ 419 0019 09        		.sleb128 9
+ 420 001a 0000 0000 		.long	0
+ 421 001e 0000 0000 		.long	0
+ 422               	.LLST1:
+ 423 0022 0A00 0000 		.long	.LVL0-.Ltext0
+ 424 0026 1200 0000 		.long	.LVL1-.Ltext0
+ 425 002a 0300      		.word	0x3
+ 426 002c 09        		.byte	0x9
+ 427 002d 80        		.byte	0x80
+ 428 002e 9F        		.byte	0x9f
+ 429 002f 1200 0000 		.long	.LVL1-.Ltext0
+ 430 0033 7400 0000 		.long	.LFE2-.Ltext0
+ 431 0037 0100      		.word	0x1
+ 432 0039 6D        		.byte	0x6d
+ 433 003a 0000 0000 		.long	0
+ 434 003e 0000 0000 		.long	0
+ 435               	.LLST2:
+ 436 0042 0A00 0000 		.long	.LVL0-.Ltext0
+ 437 0046 1200 0000 		.long	.LVL1-.Ltext0
+ 438 004a 0200      		.word	0x2
+ 439 004c 30        		.byte	0x30
+ 440 004d 9F        		.byte	0x9f
+ 441 004e 1200 0000 		.long	.LVL1-.Ltext0
+ 442 0052 3E00 0000 		.long	.LVL7-.Ltext0
+ 443 0056 0100      		.word	0x1
+ 444 0058 6C        		.byte	0x6c
+ 445 0059 0000 0000 		.long	0
+ 446 005d 0000 0000 		.long	0
+ 447               	.LLST3:
+ 448 0061 3000 0000 		.long	.LVL6-.Ltext0
+ 449 0065 7000 0000 		.long	.LVL15-.Ltext0
+ 450 0069 0100      		.word	0x1
+ 451 006b 6C        		.byte	0x6c
+ 452 006c 7000 0000 		.long	.LVL15-.Ltext0
+ 453 0070 7400 0000 		.long	.LFE2-.Ltext0
+ 454 0074 0200      		.word	0x2
+ 455 0076 08        		.byte	0x8
+ 456 0077 51        		.byte	0x51
+ 457 0078 0000 0000 		.long	0
+ 458 007c 0000 0000 		.long	0
+ 459               	.LLST4:
+ 460 0080 1C00 0000 		.long	.LVL3-.Ltext0
+ 461 0084 3E00 0000 		.long	.LVL7-.Ltext0
+ 462 0088 0600      		.word	0x6
+ 463 008a 5E        		.byte	0x5e
+ 464 008b 93        		.byte	0x93
+ 465 008c 01        		.uleb128 0x1
+ 466 008d 5F        		.byte	0x5f
+ 467 008e 93        		.byte	0x93
+ 468 008f 01        		.uleb128 0x1
+ 469 0090 4A00 0000 		.long	.LVL8-.Ltext0
+ 470 0094 4E00 0000 		.long	.LVL9-.Ltext0
+ 471 0098 0400      		.word	0x4
+ 472 009a 88        		.byte	0x88
+ 473 009b CC6D      		.sleb128 -2356
+ 474 009d 9F        		.byte	0x9f
+ 475 009e 4E00 0000 		.long	.LVL9-.Ltext0
+ 476 00a2 6400 0000 		.long	.LVL14-.Ltext0
+ 477 00a6 0600      		.word	0x6
+ 478 00a8 68        		.byte	0x68
+ 479 00a9 93        		.byte	0x93
+ 480 00aa 01        		.uleb128 0x1
+ 481 00ab 69        		.byte	0x69
+ 482 00ac 93        		.byte	0x93
+ 483 00ad 01        		.uleb128 0x1
+ 484 00ae 0000 0000 		.long	0
+ 485 00b2 0000 0000 		.long	0
+ 486               	.LLST5:
+ 487 00b6 3000 0000 		.long	.LVL6-.Ltext0
+ 488 00ba 5E00 0000 		.long	.LVL11-.Ltext0
+ 489 00be 0600      		.word	0x6
+ 490 00c0 5E        		.byte	0x5e
+ 491 00c1 93        		.byte	0x93
+ 492 00c2 01        		.uleb128 0x1
+ 493 00c3 5F        		.byte	0x5f
+ 494 00c4 93        		.byte	0x93
+ 495 00c5 01        		.uleb128 0x1
+ 496 00c6 5E00 0000 		.long	.LVL11-.Ltext0
+ 497 00ca 6200 0000 		.long	.LVL13-.Ltext0
+ 498 00ce 0600      		.word	0x6
+ 499 00d0 68        		.byte	0x68
+ 500 00d1 93        		.byte	0x93
+ 501 00d2 01        		.uleb128 0x1
+ 502 00d3 69        		.byte	0x69
+ 503 00d4 93        		.byte	0x93
+ 504 00d5 01        		.uleb128 0x1
+ 505 00d6 6200 0000 		.long	.LVL13-.Ltext0
+ 506 00da 7400 0000 		.long	.LFE2-.Ltext0
+ 507 00de 0600      		.word	0x6
+ 508 00e0 5E        		.byte	0x5e
+ 509 00e1 93        		.byte	0x93
+ 510 00e2 01        		.uleb128 0x1
+ 511 00e3 5F        		.byte	0x5f
+ 512 00e4 93        		.byte	0x93
+ 513 00e5 01        		.uleb128 0x1
+ 514 00e6 0000 0000 		.long	0
+ 515 00ea 0000 0000 		.long	0
+ 516               		.section	.debug_aranges,"",@progbits
+ 517 0000 1C00 0000 		.long	0x1c
+ 518 0004 0200      		.word	0x2
+ 519 0006 0000 0000 		.long	.Ldebug_info0
+ 520 000a 04        		.byte	0x4
+ 521 000b 00        		.byte	0
+ 522 000c 0000      		.word	0
+ 523 000e 0000      		.word	0
+ 524 0010 0000 0000 		.long	.Ltext0
+ 525 0014 7400 0000 		.long	.Letext0-.Ltext0
+ 526 0018 0000 0000 		.long	0
+ 527 001c 0000 0000 		.long	0
+ 528               		.section	.debug_line,"",@progbits
+ 529               	.Ldebug_line0:
+ 530 0000 E300 0000 		.section	.debug_str,"MS",@progbits,1
+ 530      0200 5D00 
+ 530      0000 0201 
+ 530      FB0E 0A00 
+ 530      0101 0101 
+ 531               	.LASF15:
+ 532 0000 2F68 6F6D 		.string	"/home/birkler/src/birkler/avrtinybootloader/app_hid"
+ 532      652F 6269 
+ 532      726B 6C65 
+ 532      722F 7372 
+ 532      632F 6269 
+ 533               	.LASF10:
+ 534 0034 6F70 7469 		.string	"optimumValue"
+ 534      6D75 6D56 
+ 534      616C 7565 
+ 534      00
+ 535               	.LASF18:
+ 536 0041 7573 624D 		.string	"usbMeasureFrameLength"
+ 536      6561 7375 
+ 536      7265 4672 
+ 536      616D 654C 
+ 536      656E 6774 
+ 537               	.LASF8:
+ 538 0057 7374 6570 		.string	"step"
+ 538      00
+ 539               	.LASF1:
+ 540 005c 756E 7369 		.string	"unsigned char"
+ 540      676E 6564 
+ 540      2063 6861 
+ 540      7200 
+ 541               	.LASF4:
+ 542 006a 6C6F 6E67 		.string	"long unsigned int"
+ 542      2075 6E73 
+ 542      6967 6E65 
+ 542      6420 696E 
+ 542      7400 
+ 543               	.LASF11:
+ 544 007c 6F70 7469 		.string	"optimumDev"
+ 544      6D75 6D44 
+ 544      6576 00
+ 545               	.LASF2:
+ 546 0087 756E 7369 		.string	"unsigned int"
+ 546      676E 6564 
+ 546      2069 6E74 
+ 546      00
+ 547               	.LASF6:
+ 548 0094 6C6F 6E67 		.string	"long long unsigned int"
+ 548      206C 6F6E 
+ 548      6720 756E 
+ 548      7369 676E 
+ 548      6564 2069 
+ 549               	.LASF16:
+ 550 00ab 7569 6E74 		.string	"uint8_t"
+ 550      385F 7400 
+ 551               	.LASF7:
+ 552 00b3 7369 7A65 		.string	"sizetype"
+ 552      7479 7065 
+ 552      00
+ 553               	.LASF5:
+ 554 00bc 6C6F 6E67 		.string	"long long int"
+ 554      206C 6F6E 
+ 554      6720 696E 
+ 554      7400 
+ 555               	.LASF14:
+ 556 00ca 2E2E 2F6F 		.string	"../osccal/osccal.c"
+ 556      7363 6361 
+ 556      6C2F 6F73 
+ 556      6363 616C 
+ 556      2E63 00
+ 557               	.LASF17:
+ 558 00dd 6361 6C69 		.string	"calibrateOscillator"
+ 558      6272 6174 
+ 558      654F 7363 
+ 558      696C 6C61 
+ 558      746F 7200 
+ 559               	.LASF13:
+ 560 00f1 474E 5520 		.string	"GNU C99 5.4.0 -mn-flash=1 -mno-skip-bug -mcall-prologues -mmcu=avr25 -gdwarf-2 -Os -std=c
+ 560      4339 3920 
+ 560      352E 342E 
+ 560      3020 2D6D 
+ 560      6E2D 666C 
+ 561               	.LASF12:
+ 562 018e 7461 7267 		.string	"targetValue"
+ 562      6574 5661 
+ 562      6C75 6500 
+ 563               	.LASF9:
+ 564 019a 7472 6961 		.string	"trialValue"
+ 564      6C56 616C 
+ 564      7565 00
+ 565               	.LASF3:
+ 566 01a5 6C6F 6E67 		.string	"long int"
+ 566      2069 6E74 
+ 566      00
+ 567               	.LASF0:
+ 568 01ae 7369 676E 		.string	"signed char"
+ 568      6564 2063 
+ 568      6861 7200 
+ 569               		.ident	"GCC: (GNU) 5.4.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 osccal.c
+     /tmp/cce2YacN.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cce2YacN.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cce2YacN.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cce2YacN.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cce2YacN.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cce2YacN.s:12     .text:0000000000000000 calibrateOscillator
+
+UNDEFINED SYMBOLS
+__prologue_saves__
+usbMeasureFrameLength
+__epilogue_restores__

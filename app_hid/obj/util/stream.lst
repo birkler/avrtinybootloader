@@ -1,0 +1,974 @@
+   1               		.file	"stream.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	stream_putchar
+  11               		.type	stream_putchar, @function
+  12               	stream_putchar:
+  13               	.LFB1:
+  14               		.file 1 "../util/stream.c"
+   1:../util/stream.c **** 
+   2:../util/stream.c **** #include <stdio.h>
+   3:../util/stream.c **** #include <string.h>
+   4:../util/stream.c **** #include <stdint.h>
+   5:../util/stream.c **** #include <stddef.h>
+   6:../util/stream.c **** 
+   7:../util/stream.c **** #include "stream.h"
+   8:../util/stream.c **** 
+   9:../util/stream.c **** int stream_putchar(stream_buffer_t* s, char c)
+  10:../util/stream.c **** {
+  15               		.loc 1 10 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22 0000 FC01      		movw r30,r24
+  11:../util/stream.c **** 	uint8_t newWritePos = (s->write + 1) & s->bufmask;
+  23               		.loc 1 11 0
+  24 0002 2381      		ldd r18,Z+3
+  25 0004 9181      		ldd r25,Z+1
+  26 0006 81E0      		ldi r24,lo8(1)
+  27               	.LVL1:
+  28 0008 820F      		add r24,r18
+  29 000a 8923      		and r24,r25
+  30               	.LVL2:
+  12:../util/stream.c **** 	if (newWritePos == s->read) {
+  31               		.loc 1 12 0
+  32 000c 3281      		ldd r19,Z+2
+  33 000e 8313      		cpse r24,r19
+  34 0010 00C0      		rjmp .L2
+  13:../util/stream.c **** 		if (s->flags & STREAM_FLAG_OVERWRITE) {
+  35               		.loc 1 13 0
+  36 0012 3081      		ld r19,Z
+  37 0014 30FF      		sbrs r19,0
+  38 0016 00C0      		rjmp .L4
+  14:../util/stream.c **** 			s->read++;
+  15:../util/stream.c **** 			s->read &= s->bufmask;
+  39               		.loc 1 15 0
+  40 0018 31E0      		ldi r19,lo8(1)
+  41 001a 380F      		add r19,r24
+  42 001c 9323      		and r25,r19
+  43 001e 9283      		std Z+2,r25
+  44               	.L2:
+  16:../util/stream.c **** 		}
+  17:../util/stream.c **** 		else {
+  18:../util/stream.c **** 			return -1;
+  19:../util/stream.c **** 		}
+  20:../util/stream.c **** 	}
+  21:../util/stream.c **** 	s->data[s->write] = c;
+  45               		.loc 1 21 0
+  46 0020 DF01      		movw r26,r30
+  47 0022 A20F      		add r26,r18
+  48 0024 B11D      		adc r27,__zero_reg__
+  49 0026 1496      		adiw r26,4
+  50 0028 6C93      		st X,r22
+  22:../util/stream.c **** 	s->write = newWritePos;
+  51               		.loc 1 22 0
+  52 002a 8383      		std Z+3,r24
+  23:../util/stream.c **** 	return c;
+  53               		.loc 1 23 0
+  54 002c 862F      		mov r24,r22
+  55               	.LVL3:
+  56 002e 90E0      		ldi r25,0
+  57 0030 0895      		ret
+  58               	.LVL4:
+  59               	.L4:
+  18:../util/stream.c **** 		}
+  60               		.loc 1 18 0
+  61 0032 8FEF      		ldi r24,lo8(-1)
+  62 0034 9FEF      		ldi r25,lo8(-1)
+  63               	.LVL5:
+  24:../util/stream.c **** }
+  64               		.loc 1 24 0
+  65 0036 0895      		ret
+  66               		.cfi_endproc
+  67               	.LFE1:
+  68               		.size	stream_putchar, .-stream_putchar
+  69               	.global	stream_getchar_nowait
+  70               		.type	stream_getchar_nowait, @function
+  71               	stream_getchar_nowait:
+  72               	.LFB2:
+  25:../util/stream.c **** 
+  26:../util/stream.c **** 
+  27:../util/stream.c **** int stream_getchar_nowait(stream_buffer_t* s)
+  28:../util/stream.c **** {
+  73               		.loc 1 28 0
+  74               		.cfi_startproc
+  75               	.LVL6:
+  76               	/* prologue: function */
+  77               	/* frame size = 0 */
+  78               	/* stack size = 0 */
+  79               	.L__stack_usage = 0
+  80 0038 FC01      		movw r30,r24
+  81               	.LVL7:
+  29:../util/stream.c **** 	int res = -1;
+  30:../util/stream.c **** 	if (s->read != s->write) {
+  82               		.loc 1 30 0
+  83 003a 9281      		ldd r25,Z+2
+  84 003c 8381      		ldd r24,Z+3
+  85               	.LVL8:
+  86 003e 9817      		cp r25,r24
+  87 0040 01F0      		breq .L8
+  31:../util/stream.c **** 		res = s->data[s->read++];
+  88               		.loc 1 31 0
+  89 0042 DF01      		movw r26,r30
+  90 0044 A90F      		add r26,r25
+  91 0046 B11D      		adc r27,__zero_reg__
+  92 0048 1496      		adiw r26,4
+  93 004a 2C91      		ld r18,X
+  94 004c 30E0      		ldi r19,0
+  95               	.LVL9:
+  32:../util/stream.c **** 		s->read &= s->bufmask;
+  96               		.loc 1 32 0
+  97 004e 9F5F      		subi r25,lo8(-(1))
+  98 0050 8181      		ldd r24,Z+1
+  99 0052 9823      		and r25,r24
+ 100 0054 9283      		std Z+2,r25
+ 101 0056 00C0      		rjmp .L7
+ 102               	.LVL10:
+ 103               	.L8:
+  29:../util/stream.c **** 	int res = -1;
+ 104               		.loc 1 29 0
+ 105 0058 2FEF      		ldi r18,lo8(-1)
+ 106 005a 3FEF      		ldi r19,lo8(-1)
+ 107               	.LVL11:
+ 108               	.L7:
+  33:../util/stream.c **** 	}
+  34:../util/stream.c **** 	return res;
+  35:../util/stream.c **** }
+ 109               		.loc 1 35 0
+ 110 005c C901      		movw r24,r18
+ 111 005e 0895      		ret
+ 112               		.cfi_endproc
+ 113               	.LFE2:
+ 114               		.size	stream_getchar_nowait, .-stream_getchar_nowait
+ 115               	.global	stream_getchar_wait
+ 116               		.type	stream_getchar_wait, @function
+ 117               	stream_getchar_wait:
+ 118               	.LFB3:
+  36:../util/stream.c **** 
+  37:../util/stream.c **** int stream_getchar_wait(stream_buffer_t* s)
+  38:../util/stream.c **** {
+ 119               		.loc 1 38 0
+ 120               		.cfi_startproc
+ 121               	.LVL12:
+ 122 0060 CF93      		push r28
+ 123               	.LCFI0:
+ 124               		.cfi_def_cfa_offset 3
+ 125               		.cfi_offset 28, -2
+ 126 0062 DF93      		push r29
+ 127               	.LCFI1:
+ 128               		.cfi_def_cfa_offset 4
+ 129               		.cfi_offset 29, -3
+ 130               	/* prologue: function */
+ 131               	/* frame size = 0 */
+ 132               	/* stack size = 2 */
+ 133               	.L__stack_usage = 2
+ 134 0064 EC01      		movw r28,r24
+ 135               	.LVL13:
+ 136               	.L10:
+  39:../util/stream.c **** 
+  40:../util/stream.c **** 	int res;
+  41:../util/stream.c **** 	do {
+  42:../util/stream.c **** 		res = stream_getchar_nowait(s);
+ 137               		.loc 1 42 0 discriminator 1
+ 138 0066 CE01      		movw r24,r28
+ 139 0068 00D0      		rcall stream_getchar_nowait
+ 140               	.LVL14:
+  43:../util/stream.c **** 	} while (res == -1);
+ 141               		.loc 1 43 0 discriminator 1
+ 142 006a 8F3F      		cpi r24,-1
+ 143 006c 2FEF      		ldi r18,-1
+ 144 006e 9207      		cpc r25,r18
+ 145 0070 01F0      		breq .L10
+ 146               	/* epilogue start */
+  44:../util/stream.c **** 	return res;
+  45:../util/stream.c **** }
+ 147               		.loc 1 45 0
+ 148 0072 DF91      		pop r29
+ 149 0074 CF91      		pop r28
+ 150               	.LVL15:
+ 151 0076 0895      		ret
+ 152               		.cfi_endproc
+ 153               	.LFE3:
+ 154               		.size	stream_getchar_wait, .-stream_getchar_wait
+ 155               	.Letext0:
+ 156               		.file 2 "../util/stream.h"
+ 157               		.file 3 "/usr/lib/avr/include/stdint.h"
+ 158               		.section	.debug_info,"",@progbits
+ 159               	.Ldebug_info0:
+ 160 0000 B201 0000 		.long	0x1b2
+ 161 0004 0200      		.word	0x2
+ 162 0006 0000 0000 		.long	.Ldebug_abbrev0
+ 163 000a 04        		.byte	0x4
+ 164 000b 01        		.uleb128 0x1
+ 165 000c 0000 0000 		.long	.LASF19
+ 166 0010 0C        		.byte	0xc
+ 167 0011 0000 0000 		.long	.LASF20
+ 168 0015 0000 0000 		.long	.LASF21
+ 169 0019 0000 0000 		.long	.Ltext0
+ 170 001d 0000 0000 		.long	.Letext0
+ 171 0021 0000 0000 		.long	.Ldebug_line0
+ 172 0025 02        		.uleb128 0x2
+ 173 0026 01        		.byte	0x1
+ 174 0027 06        		.byte	0x6
+ 175 0028 0000 0000 		.long	.LASF0
+ 176 002c 03        		.uleb128 0x3
+ 177 002d 0000 0000 		.long	.LASF14
+ 178 0031 03        		.byte	0x3
+ 179 0032 7E        		.byte	0x7e
+ 180 0033 3700 0000 		.long	0x37
+ 181 0037 02        		.uleb128 0x2
+ 182 0038 01        		.byte	0x1
+ 183 0039 08        		.byte	0x8
+ 184 003a 0000 0000 		.long	.LASF1
+ 185 003e 04        		.uleb128 0x4
+ 186 003f 02        		.byte	0x2
+ 187 0040 05        		.byte	0x5
+ 188 0041 696E 7400 		.string	"int"
+ 189 0045 02        		.uleb128 0x2
+ 190 0046 02        		.byte	0x2
+ 191 0047 07        		.byte	0x7
+ 192 0048 0000 0000 		.long	.LASF2
+ 193 004c 02        		.uleb128 0x2
+ 194 004d 04        		.byte	0x4
+ 195 004e 05        		.byte	0x5
+ 196 004f 0000 0000 		.long	.LASF3
+ 197 0053 02        		.uleb128 0x2
+ 198 0054 04        		.byte	0x4
+ 199 0055 07        		.byte	0x7
+ 200 0056 0000 0000 		.long	.LASF4
+ 201 005a 02        		.uleb128 0x2
+ 202 005b 08        		.byte	0x8
+ 203 005c 05        		.byte	0x5
+ 204 005d 0000 0000 		.long	.LASF5
+ 205 0061 02        		.uleb128 0x2
+ 206 0062 08        		.byte	0x8
+ 207 0063 07        		.byte	0x7
+ 208 0064 0000 0000 		.long	.LASF6
+ 209 0068 02        		.uleb128 0x2
+ 210 0069 01        		.byte	0x1
+ 211 006a 08        		.byte	0x8
+ 212 006b 0000 0000 		.long	.LASF7
+ 213 006f 05        		.uleb128 0x5
+ 214 0070 04        		.byte	0x4
+ 215 0071 02        		.byte	0x2
+ 216 0072 11        		.byte	0x11
+ 217 0073 BE00 0000 		.long	0xbe
+ 218 0077 06        		.uleb128 0x6
+ 219 0078 0000 0000 		.long	.LASF8
+ 220 007c 02        		.byte	0x2
+ 221 007d 12        		.byte	0x12
+ 222 007e 2C00 0000 		.long	0x2c
+ 223 0082 02        		.byte	0x2
+ 224 0083 23        		.byte	0x23
+ 225 0084 00        		.uleb128 0
+ 226 0085 06        		.uleb128 0x6
+ 227 0086 0000 0000 		.long	.LASF9
+ 228 008a 02        		.byte	0x2
+ 229 008b 13        		.byte	0x13
+ 230 008c 2C00 0000 		.long	0x2c
+ 231 0090 02        		.byte	0x2
+ 232 0091 23        		.byte	0x23
+ 233 0092 01        		.uleb128 0x1
+ 234 0093 06        		.uleb128 0x6
+ 235 0094 0000 0000 		.long	.LASF10
+ 236 0098 02        		.byte	0x2
+ 237 0099 14        		.byte	0x14
+ 238 009a 2C00 0000 		.long	0x2c
+ 239 009e 02        		.byte	0x2
+ 240 009f 23        		.byte	0x23
+ 241 00a0 02        		.uleb128 0x2
+ 242 00a1 06        		.uleb128 0x6
+ 243 00a2 0000 0000 		.long	.LASF11
+ 244 00a6 02        		.byte	0x2
+ 245 00a7 15        		.byte	0x15
+ 246 00a8 2C00 0000 		.long	0x2c
+ 247 00ac 02        		.byte	0x2
+ 248 00ad 23        		.byte	0x23
+ 249 00ae 03        		.uleb128 0x3
+ 250 00af 06        		.uleb128 0x6
+ 251 00b0 0000 0000 		.long	.LASF12
+ 252 00b4 02        		.byte	0x2
+ 253 00b5 16        		.byte	0x16
+ 254 00b6 BE00 0000 		.long	0xbe
+ 255 00ba 02        		.byte	0x2
+ 256 00bb 23        		.byte	0x23
+ 257 00bc 04        		.uleb128 0x4
+ 258 00bd 00        		.byte	0
+ 259 00be 07        		.uleb128 0x7
+ 260 00bf 2C00 0000 		.long	0x2c
+ 261 00c3 CD00 0000 		.long	0xcd
+ 262 00c7 08        		.uleb128 0x8
+ 263 00c8 CD00 0000 		.long	0xcd
+ 264 00cc 00        		.byte	0
+ 265 00cd 02        		.uleb128 0x2
+ 266 00ce 02        		.byte	0x2
+ 267 00cf 07        		.byte	0x7
+ 268 00d0 0000 0000 		.long	.LASF13
+ 269 00d4 03        		.uleb128 0x3
+ 270 00d5 0000 0000 		.long	.LASF15
+ 271 00d9 02        		.byte	0x2
+ 272 00da 17        		.byte	0x17
+ 273 00db 6F00 0000 		.long	0x6f
+ 274 00df 09        		.uleb128 0x9
+ 275 00e0 01        		.byte	0x1
+ 276 00e1 0000 0000 		.long	.LASF16
+ 277 00e5 01        		.byte	0x1
+ 278 00e6 09        		.byte	0x9
+ 279 00e7 01        		.byte	0x1
+ 280 00e8 3E00 0000 		.long	0x3e
+ 281 00ec 0000 0000 		.long	.LFB1
+ 282 00f0 0000 0000 		.long	.LFE1
+ 283 00f4 03        		.byte	0x3
+ 284 00f5 92        		.byte	0x92
+ 285 00f6 20        		.uleb128 0x20
+ 286 00f7 02        		.sleb128 2
+ 287 00f8 01        		.byte	0x1
+ 288 00f9 2501 0000 		.long	0x125
+ 289 00fd 0A        		.uleb128 0xa
+ 290 00fe 7300      		.string	"s"
+ 291 0100 01        		.byte	0x1
+ 292 0101 09        		.byte	0x9
+ 293 0102 2501 0000 		.long	0x125
+ 294 0106 0000 0000 		.long	.LLST0
+ 295 010a 0B        		.uleb128 0xb
+ 296 010b 6300      		.string	"c"
+ 297 010d 01        		.byte	0x1
+ 298 010e 09        		.byte	0x9
+ 299 010f 6800 0000 		.long	0x68
+ 300 0113 01        		.byte	0x1
+ 301 0114 66        		.byte	0x66
+ 302 0115 0C        		.uleb128 0xc
+ 303 0116 0000 0000 		.long	.LASF18
+ 304 011a 01        		.byte	0x1
+ 305 011b 0B        		.byte	0xb
+ 306 011c 2C00 0000 		.long	0x2c
+ 307 0120 0000 0000 		.long	.LLST1
+ 308 0124 00        		.byte	0
+ 309 0125 0D        		.uleb128 0xd
+ 310 0126 02        		.byte	0x2
+ 311 0127 D400 0000 		.long	0xd4
+ 312 012b 09        		.uleb128 0x9
+ 313 012c 01        		.byte	0x1
+ 314 012d 0000 0000 		.long	.LASF17
+ 315 0131 01        		.byte	0x1
+ 316 0132 1B        		.byte	0x1b
+ 317 0133 01        		.byte	0x1
+ 318 0134 3E00 0000 		.long	0x3e
+ 319 0138 0000 0000 		.long	.LFB2
+ 320 013c 0000 0000 		.long	.LFE2
+ 321 0140 03        		.byte	0x3
+ 322 0141 92        		.byte	0x92
+ 323 0142 20        		.uleb128 0x20
+ 324 0143 02        		.sleb128 2
+ 325 0144 01        		.byte	0x1
+ 326 0145 6601 0000 		.long	0x166
+ 327 0149 0A        		.uleb128 0xa
+ 328 014a 7300      		.string	"s"
+ 329 014c 01        		.byte	0x1
+ 330 014d 1B        		.byte	0x1b
+ 331 014e 2501 0000 		.long	0x125
+ 332 0152 0000 0000 		.long	.LLST2
+ 333 0156 0E        		.uleb128 0xe
+ 334 0157 7265 7300 		.string	"res"
+ 335 015b 01        		.byte	0x1
+ 336 015c 1D        		.byte	0x1d
+ 337 015d 3E00 0000 		.long	0x3e
+ 338 0161 0000 0000 		.long	.LLST3
+ 339 0165 00        		.byte	0
+ 340 0166 0F        		.uleb128 0xf
+ 341 0167 01        		.byte	0x1
+ 342 0168 0000 0000 		.long	.LASF22
+ 343 016c 01        		.byte	0x1
+ 344 016d 25        		.byte	0x25
+ 345 016e 01        		.byte	0x1
+ 346 016f 3E00 0000 		.long	0x3e
+ 347 0173 0000 0000 		.long	.LFB3
+ 348 0177 0000 0000 		.long	.LFE3
+ 349 017b 0000 0000 		.long	.LLST4
+ 350 017f 01        		.byte	0x1
+ 351 0180 0A        		.uleb128 0xa
+ 352 0181 7300      		.string	"s"
+ 353 0183 01        		.byte	0x1
+ 354 0184 25        		.byte	0x25
+ 355 0185 2501 0000 		.long	0x125
+ 356 0189 0000 0000 		.long	.LLST5
+ 357 018d 10        		.uleb128 0x10
+ 358 018e 7265 7300 		.string	"res"
+ 359 0192 01        		.byte	0x1
+ 360 0193 28        		.byte	0x28
+ 361 0194 3E00 0000 		.long	0x3e
+ 362 0198 06        		.byte	0x6
+ 363 0199 68        		.byte	0x68
+ 364 019a 93        		.byte	0x93
+ 365 019b 01        		.uleb128 0x1
+ 366 019c 69        		.byte	0x69
+ 367 019d 93        		.byte	0x93
+ 368 019e 01        		.uleb128 0x1
+ 369 019f 11        		.uleb128 0x11
+ 370 01a0 0000 0000 		.long	.LVL14
+ 371 01a4 2B01 0000 		.long	0x12b
+ 372 01a8 12        		.uleb128 0x12
+ 373 01a9 06        		.byte	0x6
+ 374 01aa 68        		.byte	0x68
+ 375 01ab 93        		.byte	0x93
+ 376 01ac 01        		.uleb128 0x1
+ 377 01ad 69        		.byte	0x69
+ 378 01ae 93        		.byte	0x93
+ 379 01af 01        		.uleb128 0x1
+ 380 01b0 02        		.byte	0x2
+ 381 01b1 8C        		.byte	0x8c
+ 382 01b2 00        		.sleb128 0
+ 383 01b3 00        		.byte	0
+ 384 01b4 00        		.byte	0
+ 385 01b5 00        		.byte	0
+ 386               		.section	.debug_abbrev,"",@progbits
+ 387               	.Ldebug_abbrev0:
+ 388 0000 01        		.uleb128 0x1
+ 389 0001 11        		.uleb128 0x11
+ 390 0002 01        		.byte	0x1
+ 391 0003 25        		.uleb128 0x25
+ 392 0004 0E        		.uleb128 0xe
+ 393 0005 13        		.uleb128 0x13
+ 394 0006 0B        		.uleb128 0xb
+ 395 0007 03        		.uleb128 0x3
+ 396 0008 0E        		.uleb128 0xe
+ 397 0009 1B        		.uleb128 0x1b
+ 398 000a 0E        		.uleb128 0xe
+ 399 000b 11        		.uleb128 0x11
+ 400 000c 01        		.uleb128 0x1
+ 401 000d 12        		.uleb128 0x12
+ 402 000e 01        		.uleb128 0x1
+ 403 000f 10        		.uleb128 0x10
+ 404 0010 06        		.uleb128 0x6
+ 405 0011 00        		.byte	0
+ 406 0012 00        		.byte	0
+ 407 0013 02        		.uleb128 0x2
+ 408 0014 24        		.uleb128 0x24
+ 409 0015 00        		.byte	0
+ 410 0016 0B        		.uleb128 0xb
+ 411 0017 0B        		.uleb128 0xb
+ 412 0018 3E        		.uleb128 0x3e
+ 413 0019 0B        		.uleb128 0xb
+ 414 001a 03        		.uleb128 0x3
+ 415 001b 0E        		.uleb128 0xe
+ 416 001c 00        		.byte	0
+ 417 001d 00        		.byte	0
+ 418 001e 03        		.uleb128 0x3
+ 419 001f 16        		.uleb128 0x16
+ 420 0020 00        		.byte	0
+ 421 0021 03        		.uleb128 0x3
+ 422 0022 0E        		.uleb128 0xe
+ 423 0023 3A        		.uleb128 0x3a
+ 424 0024 0B        		.uleb128 0xb
+ 425 0025 3B        		.uleb128 0x3b
+ 426 0026 0B        		.uleb128 0xb
+ 427 0027 49        		.uleb128 0x49
+ 428 0028 13        		.uleb128 0x13
+ 429 0029 00        		.byte	0
+ 430 002a 00        		.byte	0
+ 431 002b 04        		.uleb128 0x4
+ 432 002c 24        		.uleb128 0x24
+ 433 002d 00        		.byte	0
+ 434 002e 0B        		.uleb128 0xb
+ 435 002f 0B        		.uleb128 0xb
+ 436 0030 3E        		.uleb128 0x3e
+ 437 0031 0B        		.uleb128 0xb
+ 438 0032 03        		.uleb128 0x3
+ 439 0033 08        		.uleb128 0x8
+ 440 0034 00        		.byte	0
+ 441 0035 00        		.byte	0
+ 442 0036 05        		.uleb128 0x5
+ 443 0037 13        		.uleb128 0x13
+ 444 0038 01        		.byte	0x1
+ 445 0039 0B        		.uleb128 0xb
+ 446 003a 0B        		.uleb128 0xb
+ 447 003b 3A        		.uleb128 0x3a
+ 448 003c 0B        		.uleb128 0xb
+ 449 003d 3B        		.uleb128 0x3b
+ 450 003e 0B        		.uleb128 0xb
+ 451 003f 01        		.uleb128 0x1
+ 452 0040 13        		.uleb128 0x13
+ 453 0041 00        		.byte	0
+ 454 0042 00        		.byte	0
+ 455 0043 06        		.uleb128 0x6
+ 456 0044 0D        		.uleb128 0xd
+ 457 0045 00        		.byte	0
+ 458 0046 03        		.uleb128 0x3
+ 459 0047 0E        		.uleb128 0xe
+ 460 0048 3A        		.uleb128 0x3a
+ 461 0049 0B        		.uleb128 0xb
+ 462 004a 3B        		.uleb128 0x3b
+ 463 004b 0B        		.uleb128 0xb
+ 464 004c 49        		.uleb128 0x49
+ 465 004d 13        		.uleb128 0x13
+ 466 004e 38        		.uleb128 0x38
+ 467 004f 0A        		.uleb128 0xa
+ 468 0050 00        		.byte	0
+ 469 0051 00        		.byte	0
+ 470 0052 07        		.uleb128 0x7
+ 471 0053 01        		.uleb128 0x1
+ 472 0054 01        		.byte	0x1
+ 473 0055 49        		.uleb128 0x49
+ 474 0056 13        		.uleb128 0x13
+ 475 0057 01        		.uleb128 0x1
+ 476 0058 13        		.uleb128 0x13
+ 477 0059 00        		.byte	0
+ 478 005a 00        		.byte	0
+ 479 005b 08        		.uleb128 0x8
+ 480 005c 21        		.uleb128 0x21
+ 481 005d 00        		.byte	0
+ 482 005e 49        		.uleb128 0x49
+ 483 005f 13        		.uleb128 0x13
+ 484 0060 00        		.byte	0
+ 485 0061 00        		.byte	0
+ 486 0062 09        		.uleb128 0x9
+ 487 0063 2E        		.uleb128 0x2e
+ 488 0064 01        		.byte	0x1
+ 489 0065 3F        		.uleb128 0x3f
+ 490 0066 0C        		.uleb128 0xc
+ 491 0067 03        		.uleb128 0x3
+ 492 0068 0E        		.uleb128 0xe
+ 493 0069 3A        		.uleb128 0x3a
+ 494 006a 0B        		.uleb128 0xb
+ 495 006b 3B        		.uleb128 0x3b
+ 496 006c 0B        		.uleb128 0xb
+ 497 006d 27        		.uleb128 0x27
+ 498 006e 0C        		.uleb128 0xc
+ 499 006f 49        		.uleb128 0x49
+ 500 0070 13        		.uleb128 0x13
+ 501 0071 11        		.uleb128 0x11
+ 502 0072 01        		.uleb128 0x1
+ 503 0073 12        		.uleb128 0x12
+ 504 0074 01        		.uleb128 0x1
+ 505 0075 40        		.uleb128 0x40
+ 506 0076 0A        		.uleb128 0xa
+ 507 0077 9742      		.uleb128 0x2117
+ 508 0079 0C        		.uleb128 0xc
+ 509 007a 01        		.uleb128 0x1
+ 510 007b 13        		.uleb128 0x13
+ 511 007c 00        		.byte	0
+ 512 007d 00        		.byte	0
+ 513 007e 0A        		.uleb128 0xa
+ 514 007f 05        		.uleb128 0x5
+ 515 0080 00        		.byte	0
+ 516 0081 03        		.uleb128 0x3
+ 517 0082 08        		.uleb128 0x8
+ 518 0083 3A        		.uleb128 0x3a
+ 519 0084 0B        		.uleb128 0xb
+ 520 0085 3B        		.uleb128 0x3b
+ 521 0086 0B        		.uleb128 0xb
+ 522 0087 49        		.uleb128 0x49
+ 523 0088 13        		.uleb128 0x13
+ 524 0089 02        		.uleb128 0x2
+ 525 008a 06        		.uleb128 0x6
+ 526 008b 00        		.byte	0
+ 527 008c 00        		.byte	0
+ 528 008d 0B        		.uleb128 0xb
+ 529 008e 05        		.uleb128 0x5
+ 530 008f 00        		.byte	0
+ 531 0090 03        		.uleb128 0x3
+ 532 0091 08        		.uleb128 0x8
+ 533 0092 3A        		.uleb128 0x3a
+ 534 0093 0B        		.uleb128 0xb
+ 535 0094 3B        		.uleb128 0x3b
+ 536 0095 0B        		.uleb128 0xb
+ 537 0096 49        		.uleb128 0x49
+ 538 0097 13        		.uleb128 0x13
+ 539 0098 02        		.uleb128 0x2
+ 540 0099 0A        		.uleb128 0xa
+ 541 009a 00        		.byte	0
+ 542 009b 00        		.byte	0
+ 543 009c 0C        		.uleb128 0xc
+ 544 009d 34        		.uleb128 0x34
+ 545 009e 00        		.byte	0
+ 546 009f 03        		.uleb128 0x3
+ 547 00a0 0E        		.uleb128 0xe
+ 548 00a1 3A        		.uleb128 0x3a
+ 549 00a2 0B        		.uleb128 0xb
+ 550 00a3 3B        		.uleb128 0x3b
+ 551 00a4 0B        		.uleb128 0xb
+ 552 00a5 49        		.uleb128 0x49
+ 553 00a6 13        		.uleb128 0x13
+ 554 00a7 02        		.uleb128 0x2
+ 555 00a8 06        		.uleb128 0x6
+ 556 00a9 00        		.byte	0
+ 557 00aa 00        		.byte	0
+ 558 00ab 0D        		.uleb128 0xd
+ 559 00ac 0F        		.uleb128 0xf
+ 560 00ad 00        		.byte	0
+ 561 00ae 0B        		.uleb128 0xb
+ 562 00af 0B        		.uleb128 0xb
+ 563 00b0 49        		.uleb128 0x49
+ 564 00b1 13        		.uleb128 0x13
+ 565 00b2 00        		.byte	0
+ 566 00b3 00        		.byte	0
+ 567 00b4 0E        		.uleb128 0xe
+ 568 00b5 34        		.uleb128 0x34
+ 569 00b6 00        		.byte	0
+ 570 00b7 03        		.uleb128 0x3
+ 571 00b8 08        		.uleb128 0x8
+ 572 00b9 3A        		.uleb128 0x3a
+ 573 00ba 0B        		.uleb128 0xb
+ 574 00bb 3B        		.uleb128 0x3b
+ 575 00bc 0B        		.uleb128 0xb
+ 576 00bd 49        		.uleb128 0x49
+ 577 00be 13        		.uleb128 0x13
+ 578 00bf 02        		.uleb128 0x2
+ 579 00c0 06        		.uleb128 0x6
+ 580 00c1 00        		.byte	0
+ 581 00c2 00        		.byte	0
+ 582 00c3 0F        		.uleb128 0xf
+ 583 00c4 2E        		.uleb128 0x2e
+ 584 00c5 01        		.byte	0x1
+ 585 00c6 3F        		.uleb128 0x3f
+ 586 00c7 0C        		.uleb128 0xc
+ 587 00c8 03        		.uleb128 0x3
+ 588 00c9 0E        		.uleb128 0xe
+ 589 00ca 3A        		.uleb128 0x3a
+ 590 00cb 0B        		.uleb128 0xb
+ 591 00cc 3B        		.uleb128 0x3b
+ 592 00cd 0B        		.uleb128 0xb
+ 593 00ce 27        		.uleb128 0x27
+ 594 00cf 0C        		.uleb128 0xc
+ 595 00d0 49        		.uleb128 0x49
+ 596 00d1 13        		.uleb128 0x13
+ 597 00d2 11        		.uleb128 0x11
+ 598 00d3 01        		.uleb128 0x1
+ 599 00d4 12        		.uleb128 0x12
+ 600 00d5 01        		.uleb128 0x1
+ 601 00d6 40        		.uleb128 0x40
+ 602 00d7 06        		.uleb128 0x6
+ 603 00d8 9742      		.uleb128 0x2117
+ 604 00da 0C        		.uleb128 0xc
+ 605 00db 00        		.byte	0
+ 606 00dc 00        		.byte	0
+ 607 00dd 10        		.uleb128 0x10
+ 608 00de 34        		.uleb128 0x34
+ 609 00df 00        		.byte	0
+ 610 00e0 03        		.uleb128 0x3
+ 611 00e1 08        		.uleb128 0x8
+ 612 00e2 3A        		.uleb128 0x3a
+ 613 00e3 0B        		.uleb128 0xb
+ 614 00e4 3B        		.uleb128 0x3b
+ 615 00e5 0B        		.uleb128 0xb
+ 616 00e6 49        		.uleb128 0x49
+ 617 00e7 13        		.uleb128 0x13
+ 618 00e8 02        		.uleb128 0x2
+ 619 00e9 0A        		.uleb128 0xa
+ 620 00ea 00        		.byte	0
+ 621 00eb 00        		.byte	0
+ 622 00ec 11        		.uleb128 0x11
+ 623 00ed 8982 01   		.uleb128 0x4109
+ 624 00f0 01        		.byte	0x1
+ 625 00f1 11        		.uleb128 0x11
+ 626 00f2 01        		.uleb128 0x1
+ 627 00f3 31        		.uleb128 0x31
+ 628 00f4 13        		.uleb128 0x13
+ 629 00f5 00        		.byte	0
+ 630 00f6 00        		.byte	0
+ 631 00f7 12        		.uleb128 0x12
+ 632 00f8 8A82 01   		.uleb128 0x410a
+ 633 00fb 00        		.byte	0
+ 634 00fc 02        		.uleb128 0x2
+ 635 00fd 0A        		.uleb128 0xa
+ 636 00fe 9142      		.uleb128 0x2111
+ 637 0100 0A        		.uleb128 0xa
+ 638 0101 00        		.byte	0
+ 639 0102 00        		.byte	0
+ 640 0103 00        		.byte	0
+ 641               		.section	.debug_loc,"",@progbits
+ 642               	.Ldebug_loc0:
+ 643               	.LLST0:
+ 644 0000 0000 0000 		.long	.LVL0-.Ltext0
+ 645 0004 0800 0000 		.long	.LVL1-.Ltext0
+ 646 0008 0600      		.word	0x6
+ 647 000a 68        		.byte	0x68
+ 648 000b 93        		.byte	0x93
+ 649 000c 01        		.uleb128 0x1
+ 650 000d 69        		.byte	0x69
+ 651 000e 93        		.byte	0x93
+ 652 000f 01        		.uleb128 0x1
+ 653 0010 0800 0000 		.long	.LVL1-.Ltext0
+ 654 0014 3800 0000 		.long	.LFE1-.Ltext0
+ 655 0018 0600      		.word	0x6
+ 656 001a 6E        		.byte	0x6e
+ 657 001b 93        		.byte	0x93
+ 658 001c 01        		.uleb128 0x1
+ 659 001d 6F        		.byte	0x6f
+ 660 001e 93        		.byte	0x93
+ 661 001f 01        		.uleb128 0x1
+ 662 0020 0000 0000 		.long	0
+ 663 0024 0000 0000 		.long	0
+ 664               	.LLST1:
+ 665 0028 0C00 0000 		.long	.LVL2-.Ltext0
+ 666 002c 2E00 0000 		.long	.LVL3-.Ltext0
+ 667 0030 0100      		.word	0x1
+ 668 0032 68        		.byte	0x68
+ 669 0033 2E00 0000 		.long	.LVL3-.Ltext0
+ 670 0037 3200 0000 		.long	.LVL4-.Ltext0
+ 671 003b 0200      		.word	0x2
+ 672 003d 8E        		.byte	0x8e
+ 673 003e 03        		.sleb128 3
+ 674 003f 3200 0000 		.long	.LVL4-.Ltext0
+ 675 0043 3600 0000 		.long	.LVL5-.Ltext0
+ 676 0047 0100      		.word	0x1
+ 677 0049 68        		.byte	0x68
+ 678 004a 3600 0000 		.long	.LVL5-.Ltext0
+ 679 004e 3800 0000 		.long	.LFE1-.Ltext0
+ 680 0052 0600      		.word	0x6
+ 681 0054 82        		.byte	0x82
+ 682 0055 01        		.sleb128 1
+ 683 0056 89        		.byte	0x89
+ 684 0057 00        		.sleb128 0
+ 685 0058 1A        		.byte	0x1a
+ 686 0059 9F        		.byte	0x9f
+ 687 005a 0000 0000 		.long	0
+ 688 005e 0000 0000 		.long	0
+ 689               	.LLST2:
+ 690 0062 3800 0000 		.long	.LVL6-.Ltext0
+ 691 0066 3E00 0000 		.long	.LVL8-.Ltext0
+ 692 006a 0600      		.word	0x6
+ 693 006c 68        		.byte	0x68
+ 694 006d 93        		.byte	0x93
+ 695 006e 01        		.uleb128 0x1
+ 696 006f 69        		.byte	0x69
+ 697 0070 93        		.byte	0x93
+ 698 0071 01        		.uleb128 0x1
+ 699 0072 3E00 0000 		.long	.LVL8-.Ltext0
+ 700 0076 6000 0000 		.long	.LFE2-.Ltext0
+ 701 007a 0600      		.word	0x6
+ 702 007c 6E        		.byte	0x6e
+ 703 007d 93        		.byte	0x93
+ 704 007e 01        		.uleb128 0x1
+ 705 007f 6F        		.byte	0x6f
+ 706 0080 93        		.byte	0x93
+ 707 0081 01        		.uleb128 0x1
+ 708 0082 0000 0000 		.long	0
+ 709 0086 0000 0000 		.long	0
+ 710               	.LLST3:
+ 711 008a 3A00 0000 		.long	.LVL7-.Ltext0
+ 712 008e 4E00 0000 		.long	.LVL9-.Ltext0
+ 713 0092 0300      		.word	0x3
+ 714 0094 09        		.byte	0x9
+ 715 0095 FF        		.byte	0xff
+ 716 0096 9F        		.byte	0x9f
+ 717 0097 4E00 0000 		.long	.LVL9-.Ltext0
+ 718 009b 5800 0000 		.long	.LVL10-.Ltext0
+ 719 009f 0600      		.word	0x6
+ 720 00a1 62        		.byte	0x62
+ 721 00a2 93        		.byte	0x93
+ 722 00a3 01        		.uleb128 0x1
+ 723 00a4 63        		.byte	0x63
+ 724 00a5 93        		.byte	0x93
+ 725 00a6 01        		.uleb128 0x1
+ 726 00a7 5800 0000 		.long	.LVL10-.Ltext0
+ 727 00ab 5C00 0000 		.long	.LVL11-.Ltext0
+ 728 00af 0300      		.word	0x3
+ 729 00b1 09        		.byte	0x9
+ 730 00b2 FF        		.byte	0xff
+ 731 00b3 9F        		.byte	0x9f
+ 732 00b4 5C00 0000 		.long	.LVL11-.Ltext0
+ 733 00b8 6000 0000 		.long	.LFE2-.Ltext0
+ 734 00bc 0600      		.word	0x6
+ 735 00be 62        		.byte	0x62
+ 736 00bf 93        		.byte	0x93
+ 737 00c0 01        		.uleb128 0x1
+ 738 00c1 63        		.byte	0x63
+ 739 00c2 93        		.byte	0x93
+ 740 00c3 01        		.uleb128 0x1
+ 741 00c4 0000 0000 		.long	0
+ 742 00c8 0000 0000 		.long	0
+ 743               	.LLST4:
+ 744 00cc 6000 0000 		.long	.LFB3-.Ltext0
+ 745 00d0 6200 0000 		.long	.LCFI0-.Ltext0
+ 746 00d4 0300      		.word	0x3
+ 747 00d6 92        		.byte	0x92
+ 748 00d7 20        		.uleb128 0x20
+ 749 00d8 02        		.sleb128 2
+ 750 00d9 6200 0000 		.long	.LCFI0-.Ltext0
+ 751 00dd 6400 0000 		.long	.LCFI1-.Ltext0
+ 752 00e1 0300      		.word	0x3
+ 753 00e3 92        		.byte	0x92
+ 754 00e4 20        		.uleb128 0x20
+ 755 00e5 03        		.sleb128 3
+ 756 00e6 6400 0000 		.long	.LCFI1-.Ltext0
+ 757 00ea 7800 0000 		.long	.LFE3-.Ltext0
+ 758 00ee 0300      		.word	0x3
+ 759 00f0 92        		.byte	0x92
+ 760 00f1 20        		.uleb128 0x20
+ 761 00f2 04        		.sleb128 4
+ 762 00f3 0000 0000 		.long	0
+ 763 00f7 0000 0000 		.long	0
+ 764               	.LLST5:
+ 765 00fb 6000 0000 		.long	.LVL12-.Ltext0
+ 766 00ff 6600 0000 		.long	.LVL13-.Ltext0
+ 767 0103 0600      		.word	0x6
+ 768 0105 68        		.byte	0x68
+ 769 0106 93        		.byte	0x93
+ 770 0107 01        		.uleb128 0x1
+ 771 0108 69        		.byte	0x69
+ 772 0109 93        		.byte	0x93
+ 773 010a 01        		.uleb128 0x1
+ 774 010b 6600 0000 		.long	.LVL13-.Ltext0
+ 775 010f 7600 0000 		.long	.LVL15-.Ltext0
+ 776 0113 0600      		.word	0x6
+ 777 0115 6C        		.byte	0x6c
+ 778 0116 93        		.byte	0x93
+ 779 0117 01        		.uleb128 0x1
+ 780 0118 6D        		.byte	0x6d
+ 781 0119 93        		.byte	0x93
+ 782 011a 01        		.uleb128 0x1
+ 783 011b 7600 0000 		.long	.LVL15-.Ltext0
+ 784 011f 7800 0000 		.long	.LFE3-.Ltext0
+ 785 0123 0400      		.word	0x4
+ 786 0125 F3        		.byte	0xf3
+ 787 0126 01        		.uleb128 0x1
+ 788 0127 68        		.byte	0x68
+ 789 0128 9F        		.byte	0x9f
+ 790 0129 0000 0000 		.long	0
+ 791 012d 0000 0000 		.long	0
+ 792               		.section	.debug_aranges,"",@progbits
+ 793 0000 1C00 0000 		.long	0x1c
+ 794 0004 0200      		.word	0x2
+ 795 0006 0000 0000 		.long	.Ldebug_info0
+ 796 000a 04        		.byte	0x4
+ 797 000b 00        		.byte	0
+ 798 000c 0000      		.word	0
+ 799 000e 0000      		.word	0
+ 800 0010 0000 0000 		.long	.Ltext0
+ 801 0014 7800 0000 		.long	.Letext0-.Ltext0
+ 802 0018 0000 0000 		.long	0
+ 803 001c 0000 0000 		.long	0
+ 804               		.section	.debug_line,"",@progbits
+ 805               	.Ldebug_line0:
+ 806 0000 E100 0000 		.section	.debug_str,"MS",@progbits,1
+ 806      0200 5100 
+ 806      0000 0201 
+ 806      FB0E 0A00 
+ 806      0101 0101 
+ 807               	.LASF17:
+ 808 0000 7374 7265 		.string	"stream_getchar_nowait"
+ 808      616D 5F67 
+ 808      6574 6368 
+ 808      6172 5F6E 
+ 808      6F77 6169 
+ 809               	.LASF21:
+ 810 0016 2F68 6F6D 		.string	"/home/birkler/src/birkler/avrtinybootloader/app_hid"
+ 810      652F 6269 
+ 810      726B 6C65 
+ 810      722F 7372 
+ 810      632F 6269 
+ 811               	.LASF18:
+ 812 004a 6E65 7757 		.string	"newWritePos"
+ 812      7269 7465 
+ 812      506F 7300 
+ 813               	.LASF12:
+ 814 0056 6461 7461 		.string	"data"
+ 814      00
+ 815               	.LASF1:
+ 816 005b 756E 7369 		.string	"unsigned char"
+ 816      676E 6564 
+ 816      2063 6861 
+ 816      7200 
+ 817               	.LASF4:
+ 818 0069 6C6F 6E67 		.string	"long unsigned int"
+ 818      2075 6E73 
+ 818      6967 6E65 
+ 818      6420 696E 
+ 818      7400 
+ 819               	.LASF11:
+ 820 007b 7772 6974 		.string	"write"
+ 820      6500 
+ 821               	.LASF20:
+ 822 0081 2E2E 2F75 		.string	"../util/stream.c"
+ 822      7469 6C2F 
+ 822      7374 7265 
+ 822      616D 2E63 
+ 822      00
+ 823               	.LASF10:
+ 824 0092 7265 6164 		.string	"read"
+ 824      00
+ 825               	.LASF2:
+ 826 0097 756E 7369 		.string	"unsigned int"
+ 826      676E 6564 
+ 826      2069 6E74 
+ 826      00
+ 827               	.LASF8:
+ 828 00a4 666C 6167 		.string	"flags"
+ 828      7300 
+ 829               	.LASF6:
+ 830 00aa 6C6F 6E67 		.string	"long long unsigned int"
+ 830      206C 6F6E 
+ 830      6720 756E 
+ 830      7369 676E 
+ 830      6564 2069 
+ 831               	.LASF14:
+ 832 00c1 7569 6E74 		.string	"uint8_t"
+ 832      385F 7400 
+ 833               	.LASF13:
+ 834 00c9 7369 7A65 		.string	"sizetype"
+ 834      7479 7065 
+ 834      00
+ 835               	.LASF16:
+ 836 00d2 7374 7265 		.string	"stream_putchar"
+ 836      616D 5F70 
+ 836      7574 6368 
+ 836      6172 00
+ 837               	.LASF5:
+ 838 00e1 6C6F 6E67 		.string	"long long int"
+ 838      206C 6F6E 
+ 838      6720 696E 
+ 838      7400 
+ 839               	.LASF7:
+ 840 00ef 6368 6172 		.string	"char"
+ 840      00
+ 841               	.LASF19:
+ 842 00f4 474E 5520 		.string	"GNU C99 5.4.0 -mn-flash=1 -mno-skip-bug -mcall-prologues -mmcu=avr25 -gdwarf-2 -Os -std=c
+ 842      4339 3920 
+ 842      352E 342E 
+ 842      3020 2D6D 
+ 842      6E2D 666C 
+ 843               	.LASF3:
+ 844 0191 6C6F 6E67 		.string	"long int"
+ 844      2069 6E74 
+ 844      00
+ 845               	.LASF15:
+ 846 019a 7374 7265 		.string	"stream_buffer_t"
+ 846      616D 5F62 
+ 846      7566 6665 
+ 846      725F 7400 
+ 847               	.LASF0:
+ 848 01aa 7369 676E 		.string	"signed char"
+ 848      6564 2063 
+ 848      6861 7200 
+ 849               	.LASF9:
+ 850 01b6 6275 666D 		.string	"bufmask"
+ 850      6173 6B00 
+ 851               	.LASF22:
+ 852 01be 7374 7265 		.string	"stream_getchar_wait"
+ 852      616D 5F67 
+ 852      6574 6368 
+ 852      6172 5F77 
+ 852      6169 7400 
+ 853               		.ident	"GCC: (GNU) 5.4.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 stream.c
+     /tmp/ccDY9JSR.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccDY9JSR.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccDY9JSR.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccDY9JSR.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccDY9JSR.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccDY9JSR.s:12     .text:0000000000000000 stream_putchar
+     /tmp/ccDY9JSR.s:71     .text:0000000000000038 stream_getchar_nowait
+     /tmp/ccDY9JSR.s:117    .text:0000000000000060 stream_getchar_wait
+
+NO UNDEFINED SYMBOLS

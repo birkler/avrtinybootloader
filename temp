@@ -1,0 +1,23 @@
+Using built-in specs.
+Target: avr
+Configured with: ../src/configure -v --enable-languages=c,c++ --prefix=/usr/lib --infodir=/usr/share/info --mandir=/usr/share/man --bindir=/usr/bin --libexecdir=/usr/lib --libdir=/usr/lib --enable-shared --with-system-zlib --enable-long-long --enable-nls --without-included-gettext --disable-checking --disable-libssp --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=avr
+Thread model: single
+gcc version 4.3.5 (GCC) 
+COLLECT_GCC_OPTIONS='-mmcu=attiny861' '-I.' '-gdwarf-2' '-DUSBSTREAM_DISABLE_RX' '-DF_CPU=16500000UL' '-DDEBUG_LEVEL=0' '-Os' '-funsigned-char' '-funsigned-bitfields' '-fpack-struct' '-fshort-enums' '-Wall' '-Wstrict-prototypes' '-mshort-calls' '-mcall-prologues' '-mno-tablejump' '-std=c99' '-I../usbdrv' '-I../osccal' '-I../util' '-I..' '-I../..' '-Wundef' '-MMD' '-MP' '-MF' '.dep/scanner-info2.d' '-E' '-P' '-v' '-dD'
+ /usr/lib/gcc/avr/4.3.5/cc1 -E -quiet -v -I. -I../usbdrv -I../osccal -I../util -I.. -I../.. -P -imultilib avr25 -MMD empty.d -MF .dep/scanner-info2.d -MP -DUSBSTREAM_DISABLE_RX -DF_CPU=16500000UL -DDEBUG_LEVEL=0 empty.c -mmcu=attiny861 -mshort-calls -mcall-prologues -mno-tablejump -std=c99 -Wall -Wstrict-prototypes -Wundef -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -fworking-directory -Os -dD
+ignoring nonexistent directory "/usr/lib/gcc/avr/4.3.5/../../../avr/sys-include"
+#include "..." search starts here:
+#include <...> search starts here:
+ .
+ ../usbdrv
+ ../osccal
+ ../util
+ ..
+ ../..
+ /usr/lib/gcc/avr/4.3.5/include
+ /usr/lib/gcc/avr/4.3.5/include-fixed
+ /usr/lib/gcc/avr/4.3.5/../../../avr/include
+End of search list.
+COMPILER_PATH=/usr/lib/gcc/avr/4.3.5/:/usr/lib/gcc/avr/4.3.5/:/usr/lib/gcc/avr/:/usr/lib/gcc/avr/4.3.5/:/usr/lib/gcc/avr/:/usr/lib/gcc/avr/4.3.5/../../../avr/bin/
+LIBRARY_PATH=/usr/lib/gcc/avr/4.3.5/avr25/:/usr/lib/gcc/avr/4.3.5/../../../avr/lib/avr25/:/usr/lib/gcc/avr/4.3.5/:/usr/lib/gcc/avr/4.3.5/../../../avr/lib/
+COLLECT_GCC_OPTIONS='-mmcu=attiny861' '-I.' '-gdwarf-2' '-DUSBSTREAM_DISABLE_RX' '-DF_CPU=16500000UL' '-DDEBUG_LEVEL=0' '-Os' '-funsigned-char' '-funsigned-bitfields' '-fpack-struct' '-fshort-enums' '-Wall' '-Wstrict-prototypes' '-mshort-calls' '-mcall-prologues' '-mno-tablejump' '-std=c99' '-I../usbdrv' '-I../osccal' '-I../util' '-I..' '-I../..' '-Wundef' '-MMD' '-MP' '-MF' '.dep/scanner-info2.d' '-E' '-P' '-v' '-dD'
