@@ -2700,25 +2700,25 @@
  2326               	.global __do_clear_bss
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 usbstream.c
-     /tmp/cc16z95B.s:2      *ABS*:000000000000003e __SP_H__
-     /tmp/cc16z95B.s:3      *ABS*:000000000000003d __SP_L__
-     /tmp/cc16z95B.s:4      *ABS*:000000000000003f __SREG__
-     /tmp/cc16z95B.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/cc16z95B.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/cc16z95B.s:11     .text:0000000000000000 usb_stream_init
-     /tmp/cc16z95B.s:349    .bss:0000000000000002 initialized
-     /tmp/cc16z95B.s:372    .bss:0000000000000003 usb_out_stream_buffer
-     /tmp/cc16z95B.s:57     .text:0000000000000032 usb_stream_putchar
-     /tmp/cc16z95B.s:107    .text:0000000000000054 usb_stream_getchar
-     /tmp/cc16z95B.s:150    .text:000000000000006e usbFunctionSetup
+     /tmp/ccBWpWqd.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccBWpWqd.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccBWpWqd.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccBWpWqd.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccBWpWqd.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccBWpWqd.s:11     .text:0000000000000000 usb_stream_init
+     /tmp/ccBWpWqd.s:349    .bss:0000000000000002 initialized
+     /tmp/ccBWpWqd.s:372    .bss:0000000000000003 usb_out_stream_buffer
+     /tmp/ccBWpWqd.s:57     .text:0000000000000032 usb_stream_putchar
+     /tmp/ccBWpWqd.s:107    .text:0000000000000054 usb_stream_getchar
+     /tmp/ccBWpWqd.s:150    .text:000000000000006e usbFunctionSetup
                              .bss:0000000000000000 usb_buf_report_id
-     /tmp/cc16z95B.s:347    .bss:0000000000000001 usb_buf_state
-     /tmp/cc16z95B.s:208    .text:00000000000000a6 usbFunctionRead2
-     /tmp/cc16z95B.s:222    .text:00000000000000aa usbFunctionRead
-     /tmp/cc16z95B.s:297    .text:00000000000000fa usbFunctionWrite2
-     /tmp/cc16z95B.s:315    .text:00000000000000fe usbFunctionWrite
-     /tmp/cc16z95B.s:354    .data:0000000000000000 usb_in_stream
-     /tmp/cc16z95B.s:364    .data:000000000000000e usb_out_stream
+     /tmp/ccBWpWqd.s:347    .bss:0000000000000001 usb_buf_state
+     /tmp/ccBWpWqd.s:208    .text:00000000000000a6 usbFunctionRead2
+     /tmp/ccBWpWqd.s:222    .text:00000000000000aa usbFunctionRead
+     /tmp/ccBWpWqd.s:297    .text:00000000000000fa usbFunctionWrite2
+     /tmp/ccBWpWqd.s:315    .text:00000000000000fe usbFunctionWrite
+     /tmp/ccBWpWqd.s:354    .data:0000000000000000 usb_in_stream
+     /tmp/ccBWpWqd.s:364    .data:000000000000000e usb_out_stream
 
 UNDEFINED SYMBOLS
 stream_putchar

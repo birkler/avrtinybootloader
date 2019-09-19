@@ -481,11 +481,12 @@ int main(void)
 		//LED Timer
 		/////////////////////////////////////////////////////
 		if (Timer_HasExpired(TIMER_LED_BLINK)) {
-			Timer_Set(TIMER_LED_BLINK,TIMER_LED_BLINK_TIMEOUT);
-			LED_RED_CHANGE();
+			Timer_Set(TIMER_LED_BLINK,TIMER_LED_BLINK_TIMEOUT*4);
+			//LED_RED_CHANGE();
+			setColorOneLed(260,100,100,100);
 		}
 		if (Timer_HasExpired(TIMER_LED_BUTTON_BLINK)) {
-			Timer_Set(TIMER_LED_BUTTON_BLINK,TIMER_LED_BLINK_TIMEOUT/2);
+			Timer_Set(TIMER_LED_BUTTON_BLINK,TIMER_LED_BLINK_TIMEOUT);
 			LED_BUTTON_CHANGE();
 		}
 
