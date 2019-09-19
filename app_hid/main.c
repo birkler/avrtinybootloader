@@ -337,10 +337,11 @@ int main(void)
 				//fprintf_P(&uartsw_stream,PSTR("stat diff=%u(%uus) max=%u(%uus) #=%u!\r\n"),capture_diff,us,capture_diff_max,us_max,captured);
 			}
 			buttonPressed = 1;
+			buttonMask |= 0x1;
 		}
 		else {
 			//LED_BUTTON_OFF();
-			//buttonMask &= ~0x1;
+			buttonMask &= ~0x1;
 			buttonPressed = 0;
 		}
 
